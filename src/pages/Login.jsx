@@ -21,24 +21,24 @@ const Login = () => {
       });
     console.log({ email, password });
   };
-//----------------pop up login-------------
- //----------------pop up login-------------
-const handlePopUpLogin = () => {
-  popUpLoginIn()
-    .then((result) => {
-      const user = result.user;
-      console.log("Google Sign In Successful", user);
-      alert("Login Successful!");
-      // You can navigate to home or dashboard here
-      // navigate('/');
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Google Login Error:", errorCode, errorMessage);
-      alert(`Error: ${errorMessage}`);
-    });
-}
+  //----------------pop up login-------------
+  //----------------pop up login-------------
+  const handlePopUpLogin = () => {
+    popUpLoginIn()
+      .then((result) => {
+        const user = result.user;
+        console.log("Google Sign In Successful", user);
+        alert("Login Successful!");
+        // You can navigate to home or dashboard here
+        // navigate('/');
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Google Login Error:", errorCode, errorMessage);
+        alert(`Error: ${errorMessage}`);
+      });
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -133,7 +133,10 @@ const handlePopUpLogin = () => {
             </div>
           </div>
           <div className="flex justify-center items-center mt-2 ">
-            <button onClick={handlePopUpLogin} className="btn bg-white text-black border-[#e5e5e5] w-full">
+            <button
+              onClick={handlePopUpLogin}
+              className="btn bg-white text-black border-[#e5e5e5] w-full"
+            >
               <svg
                 aria-label="Google logo"
                 width="16"
@@ -164,6 +167,15 @@ const handlePopUpLogin = () => {
               Login with Google
             </button>
           </div>
+          <p className="text-center text-sm text-gray-600 mt-6">
+            Don't have an Account?
+            <Link
+              to="/register"
+              className="ml-1 text-purple-600 font-bold hover:text-purple-700 underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
+            >
+              Register Now
+            </Link>
+          </p>
         </div>
       </div>
     </div>
