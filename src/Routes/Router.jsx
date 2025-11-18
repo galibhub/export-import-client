@@ -8,6 +8,8 @@ import AddExport from "../components/AddExport/AddExport";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import PrivetRoute from "./PrivetRoute";
+import AboutUs from "../pages/AboutUs";
+import ContactUs from "../pages/ContactUs";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +25,14 @@ const router = createBrowserRouter([
         path: "/allProducts",
         element: <AllProducts />,
         loader:()=>fetch('http://localhost:3000/products')
+      },
+      {
+        path:'/about-us',
+        element:<AboutUs></AboutUs>
+      },
+      {
+        path:'/contact-us',
+        element:<ContactUs></ContactUs>
       },
       {
         path:'/myImport',

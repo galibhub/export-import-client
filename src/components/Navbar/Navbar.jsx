@@ -14,6 +14,9 @@ const Navbar = () => {
         <NavLink to="/allProducts">All Products</NavLink>
       </li>
       <li className="text-primary font-semibold">
+        <NavLink to="/about-us">About Us</NavLink>
+      </li>
+      <li className="text-primary font-semibold">
         <NavLink to="/myExport">My Export</NavLink>
       </li>
       <li className="text-primary font-semibold">
