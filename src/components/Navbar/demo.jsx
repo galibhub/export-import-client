@@ -1,9 +1,12 @@
-import { use } from "react";
+import { use} from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
-  const { user, LogOut } = use(AuthContext);
+  const { user,LogOut } = use(AuthContext);
+ 
+
+ 
 
   const links = (
     <>
@@ -11,33 +14,49 @@ const Navbar = () => {
         <NavLink to="/">Home</NavLink>
       </li>
       <li className="text-primary font-semibold">
-        <NavLink to="/allProducts">All Products</NavLink>
+        {" "}
+        <NavLink to="/allProducts">All Products</NavLink>{" "}
       </li>
       <li className="text-primary font-semibold">
-        <NavLink to="/myExport">My Export</NavLink>
+        {" "}
+        <NavLink to="/myExport">My Export</NavLink>{" "}
       </li>
       <li className="text-primary font-semibold">
-        <NavLink to="/myImport">My Import</NavLink>
+        {" "}
+        <NavLink to="/myImport">My Import</NavLink>{" "}
       </li>
       <li className="text-primary font-semibold">
-        <NavLink to="/addExport">Add Export</NavLink>
+        {" "}
+        <NavLink to="/addExport">Add Export</NavLink>{" "}
       </li>
+      {/* <li className="text-primary font-semibold">
+        {" "}
+        <NavLink to="/login">Login</NavLink>{" "}
+      </li>
+      <li className="text-primary font-semibold">
+        {" "}
+        <NavLink to="/Register">Register</NavLink>{" "}
+      </li> */}
     </>
   );
 
-  //---------logout--------------
-  const handleLogOut = () => {
-    LogOut()
-      .then(() => {
-        alert("Sign Out Successfully");
-      })
-      .catch((error) => {
-        alert(`An Error happened: ${error.message}`);
-      });
-  };
+//---------logout--------------
+const handleLogOut=()=>{
+  LogOut()
+  .then(()=>{
+    alert("Sign Out Successfully");
+  }).catch((error)=>{
+    alert('An Error hapended',error)
+  })
+  console.log("logout")
+}
+
+
+
+
 
   return (
-    <div className="navbar bg-gradient-to-r from-emerald-50 to-white shadow-sm">
+   <div className="navbar bg-gradient-to-r from-emerald-50 to-white shadow-sm">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -48,12 +67,13 @@ const Navbar = () => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
+              {" "}
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16"
-              />
+              />{" "}
             </svg>
           </div>
           <ul
@@ -71,29 +91,16 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end">
-        <input
+          <input
           type="checkbox"
+          checked={isDarkMode}
+          onChange={toggleDarkMode}
           className="toggle toggle-primary mr-4"
         />
         <div className="flex items-center gap-2">
-          {/* ✅ User থাকলে Image দেখাবে */}
-          {user && (
-            <div className="avatar">
-              <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img
-                  src={user.photoURL || "https://i.ibb.co/WchFhLg/user.png"}
-                  alt={user.displayName || "User"}
-                  title={user.email} // Hover করলে email দেখাবে
-                />
-              </div>
-            </div>
-          )}
-          
-          {/* Login/Logout Button */}
+          <span className="text-sm font-medium">{user && user.email}</span>
           {user ? (
-            <button onClick={handleLogOut} className="btn btn-primary">
-              Sign Out
-            </button>
+            <button onClick={handleLogOut} className="btn btn-primary">Sign Out</button>
           ) : (
             <NavLink to="/login">
               <button className="btn btn-primary">Login</button>

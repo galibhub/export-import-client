@@ -1,6 +1,8 @@
 import React, { use} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
+import { updateProfile } from "firebase/auth";
+
 
 const Register = () => {
   const { createUser } = use(AuthContext); 
@@ -23,10 +25,11 @@ const Register = () => {
     }
 
     console.log("signup", name, email, photoURL, password);
-
+// CREATE USER
     createUser(email, password)
       .then(result => {
         const user = result.user;
+
   
         alert('Registration Successful! Please login.');
         form.reset(); 
