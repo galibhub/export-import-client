@@ -1,7 +1,30 @@
-import React from "react";
+import React, { use } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const Login = () => {
+
+const {signIn}=use(AuthContext);
+  const handleLogIn=(e)=>{
+e.preventDefault();
+  const form=e.target;
+  const email=form.email.value;
+  const password=form.password.value;
+  signIn(email,password)
+  .then(result=>{
+    const user=result.user;
+    console.log('sign In SuccessFull',user)
+    
+  })
+  .catch((error)=>{
+    const errorCode=error.code;
+    const errorMessage=error.message;
+    alert("Error Found",errorCode,errorMessage)
+  })
+  console.log({email,password})
+  }
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -30,13 +53,14 @@ const Login = () => {
             Login now!
           </h2>
           
-          <form className="space-y-6">
+          <form onSubmit={handleLogIn} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email
               </label>
               <input
                 type="email"
+                name="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 required
@@ -49,19 +73,20 @@ const Login = () => {
               </label>
               <input
                 type="password"
+                name="password"
                 placeholder="Enter your password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 required
               />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-items-start">
               <label className="flex items-center">
-                <input 
+                {/* <input 
                   type="checkbox" 
                   className="w-4 h-4 text-blue-600 border border-gray-300 rounded focus:ring-blue-500" 
-                />
-                <span className="ml-2 text-sm text-gray-600">Remember me</span>
+                /> */}
+                {/* <span className="ml-2 text-sm text-gray-600">Remember me</span> */}
               </label>
               <a href="#" className="text-sm text-blue-600 hover:text-blue-800 underline">
                 Forgot password?

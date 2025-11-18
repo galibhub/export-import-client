@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
-  const { user } = use(AuthContext);
+  const { user,LogOut } = use(AuthContext);
   const links = (
     <>
       <li className="text-primary font-semibold">
@@ -35,8 +35,25 @@ const Navbar = () => {
       </li>
     </>
   );
+
+//---------logout--------------
+const handleLogOut=()=>{
+  LogOut()
+  .then(()=>{
+    alert("Sign Out Successfully");
+  }).catch((error)=>{
+    alert('An Error hapended',error)
+  })
+  console.log("logout")
+}
+
+
+
+
+
+
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+   <div className="navbar bg-gradient-to-r from-emerald-50 to-white shadow-sm">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -79,7 +96,7 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{user && user.email}</span>
           {user ? (
-            <button className="btn btn-primary">Sign Out</button>
+            <button onClick={handleLogOut} className="btn btn-primary">Sign Out</button>
           ) : (
             <NavLink to="/login">
               <button className="btn btn-primary">Login</button>
