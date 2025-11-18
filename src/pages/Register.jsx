@@ -1,7 +1,37 @@
-import React from "react";
+import React, { use, useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const Register = () => {
+
+ const {createUser,setUser}=use(AuthContext)
+
+const handleRegister=(e)=>{
+  e.preventDefault();
+  const form=e.target;
+  const name=form.name.value;
+  const email=form.email.value;
+  const photoURL=form.photoURL.value;
+  const password=form.password.value;
+  
+
+  console.log("signup",name,email,photoURL,password);
+
+  createUser(email,password)
+  .then(result=>{
+    const user=result.user;
+   setUser(user)
+  //  console.log(user)
+    alert('Login Successfull')
+  })
+  .catch((error)=>{
+    const errorCode=error.code;
+    const errorMessage=error.message;
+    alert("Error Found",errorMessage)
+  })
+}
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -30,13 +60,14 @@ const Register = () => {
             Create Account
           </h2>
           
-          <form className="space-y-6">
+          <form onSubmit={handleRegister} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Name
               </label>
               <input
                 type="text"
+                name="name"
                 placeholder="Enter your name"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 required
@@ -48,7 +79,7 @@ const Register = () => {
                 Email
               </label>
               <input
-                type="email"
+                type="email" name="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 required
@@ -61,6 +92,7 @@ const Register = () => {
               </label>
               <input
                 type="url"
+                name="photoURL"
                 placeholder="Enter photo URL (optional)"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
               />
@@ -72,6 +104,7 @@ const Register = () => {
               </label>
               <input
                 type="password"
+                name="password"
                 placeholder="Create a password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 required
@@ -82,7 +115,7 @@ const Register = () => {
               type="submit"
               className="w-full bg-gray-800 text-white py-3 rounded-lg font-semibold hover:bg-gray-900 transition duration-200"
             >
-              Create Account
+              Sign Up
             </button>
           </form>
 
