@@ -4,6 +4,7 @@ import { AuthContext } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
   const { user,LogOut } = use(AuthContext);
+  const 
   const links = (
     <>
       <li className="text-primary font-semibold">
@@ -25,14 +26,14 @@ const Navbar = () => {
         {" "}
         <NavLink to="/addExport">Add Export</NavLink>{" "}
       </li>
-      <li className="text-primary font-semibold">
+      {/* <li className="text-primary font-semibold">
         {" "}
         <NavLink to="/login">Login</NavLink>{" "}
       </li>
       <li className="text-primary font-semibold">
         {" "}
         <NavLink to="/Register">Register</NavLink>{" "}
-      </li>
+      </li> */}
     </>
   );
 

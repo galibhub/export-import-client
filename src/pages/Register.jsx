@@ -1,36 +1,43 @@
-import React, { use, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { use} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
 
 const Register = () => {
+  const { createUser } = use(AuthContext); 
+  const navigate = useNavigate(); 
 
- const {createUser,setUser}=use(AuthContext)
+  const handleRegister = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const photoURL = form.photoURL.value;
+    const password = form.password.value;
 
-const handleRegister=(e)=>{
-  e.preventDefault();
-  const form=e.target;
-  const name=form.name.value;
-  const email=form.email.value;
-  const photoURL=form.photoURL.value;
-  const password=form.password.value;
+    // Password validation using regex
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+
+    if (!passwordRegex.test(password)) {
+      alert("Password must be at least 6 characters with uppercase and lowercase letters");
+      return; 
+    }
+
+    console.log("signup", name, email, photoURL, password);
+
+    createUser(email, password)
+      .then(result => {
+        const user = result.user;
   
-
-  console.log("signup",name,email,photoURL,password);
-
-  createUser(email,password)
-  .then(result=>{
-    const user=result.user;
-   setUser(user)
-  //  console.log(user)
-    alert('Login Successfull')
-  })
-  .catch((error)=>{
-    const errorCode=error.code;
-    const errorMessage=error.message;
-    alert("Error Found",errorMessage)
-  })
-}
-
+        alert('Registration Successful! Please login.');
+        form.reset(); 
+        navigate('/login'); 
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert(`Error: ${errorMessage}`);
+      })
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
@@ -79,7 +86,8 @@ const handleRegister=(e)=>{
                 Email
               </label>
               <input
-                type="email" name="email"
+                type="email" 
+                name="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 required
@@ -115,50 +123,9 @@ const handleRegister=(e)=>{
               type="submit"
               className="w-full bg-gray-800 text-white py-3 rounded-lg font-semibold hover:bg-gray-900 transition duration-200"
             >
-              Sign Up
+              Register
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Google Register Button */}
-          <button className="mt-4 w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50 transition duration-200 flex items-center justify-center space-x-2">
-            <svg
-              width="20"
-              height="20"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-            >
-              <path d="m0 0H512V512H0" fill="#fff"></path>
-              <path
-                fill="#34a853"
-                d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-              ></path>
-              <path
-                fill="#4285f4"
-                d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-              ></path>
-              <path
-                fill="#fbbc02"
-                d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-              ></path>
-              <path
-                fill="#ea4335"
-                d="M153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-              ></path>
-            </svg>
-            <span>Sign up with Google</span>
-          </button>
         </div>
       </div>
     </div>

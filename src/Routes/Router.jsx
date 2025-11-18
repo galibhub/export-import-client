@@ -7,6 +7,7 @@ import MyExport from "../components/MyExport/MyExport";
 import AddExport from "../components/AddExport/AddExport";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import PrivetRoute from "./PrivetRoute";
 
 const router = createBrowserRouter([
   {
@@ -23,15 +24,21 @@ const router = createBrowserRouter([
       },
       {
         path:'/myImport',
-        element: <MyImport />
+        element: <PrivetRoute>
+          <MyImport />
+        </PrivetRoute>
       },
       {
         path:'/myExport',
-        element:<MyExport></MyExport>
+        element:<PrivetRoute>
+          <MyExport></MyExport>
+        </PrivetRoute>
       },
       {
         path:'/addExport',
-        element:<AddExport></AddExport>
+        element:<PrivetRoute>
+          <AddExport></AddExport>
+          </PrivetRoute>
       },
       {
         path:'/login',
