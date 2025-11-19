@@ -6,18 +6,10 @@ import { toast } from "react-toastify";
 const Login = () => {
   const { signIn, popUpLoginIn } = use(AuthContext);
    
-
   const navigate=useNavigate();
   const location=useLocation();
 
   const from = location.state?.from?.pathname || '/';
-
-
-
-
-
-
-
 
   const handleLogIn = (e) => {
     e.preventDefault();
@@ -42,8 +34,7 @@ const Login = () => {
       });
     console.log({ email, password });
   };
-  //----------------pop up login-------------
-  //----------------pop up login-------------
+
   const handlePopUpLogin = () => {
     popUpLoginIn()
       .then((result) => {
@@ -53,8 +44,6 @@ const Login = () => {
           duration: 3000,
         });
          navigate(from, { replace: true });
-        // You can navigate to home or dashboard here
-        // navigate('/');
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -63,23 +52,24 @@ const Login = () => {
         alert(`Error: ${errorMessage}`);
       });
   };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         {/* Left side content */}
         <div className="text-center lg:text-left">
-          <h1 className="text-4xl lg:text-6xl font-bold text-gray-800 leading-tight mb-6">
+          <h1 className="text-4xl lg:text-6xl font-bold text-base-content leading-tight mb-6">
             LOG IN TO
             <br />
             YOUR EXPORT
             <br />
-            <span className="text-green-400">IMPORT HUB.</span>
+            <span className="text-success">IMPORT HUB.</span>
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-base-content/70">
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-800 underline font-semibold"
+              className="text-primary hover:text-primary/80 underline font-semibold transition-colors"
             >
               Create one →
             </Link>
@@ -87,43 +77,41 @@ const Login = () => {
         </div>
 
         {/* Right side - Login form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        <div className="bg-base-100 rounded-2xl shadow-xl p-8 border border-base-300">
+          <h2 className="text-3xl font-bold text-base-content mb-8 text-center">
             Login now!
           </h2>
 
           <form onSubmit={handleLogIn} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-base-content mb-2">
                 Email
               </label>
               <input
                 type="email"
                 name="email"
                 placeholder="Enter your email"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 border border-base-300 bg-base-200 text-base-content rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-base-content mb-2">
                 Password
               </label>
               <input
                 type="password"
                 name="password"
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 border border-base-300 bg-base-200 text-base-content rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
                 required
               />
             </div>
 
-           
-
             <button
               type="submit"
-              className="w-full btn btn-primary text-white py-3 rounded-lg font-semibold hover:bg-gray-900 transition duration-200"
+              className="w-full btn btn-primary text-primary-content py-3 rounded-lg font-semibold hover:scale-105 transition-transform duration-200"
             >
               Login
             </button>
@@ -133,19 +121,20 @@ const Login = () => {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-base-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
+                <span className="px-2 bg-base-100 text-base-content/70">
                   Or continue with
                 </span>
               </div>
             </div>
           </div>
-          <div className="flex justify-center items-center mt-2 ">
+
+          <div className="flex justify-center items-center mt-6">
             <button
               onClick={handlePopUpLogin}
-              className="btn bg-white text-black border-[#e5e5e5] w-full"
+              className="btn btn-outline w-full border-base-300 hover:bg-base-200 hover:border-base-300"
             >
               <svg
                 aria-label="Google logo"
@@ -177,11 +166,12 @@ const Login = () => {
               Login with Google
             </button>
           </div>
-          <p className="text-center text-sm text-gray-600 mt-6">
+
+          <p className="text-center text-sm text-base-content/70 mt-6">
             Don't have an Account?
             <Link
               to="/register"
-              className="ml-1 text-purple-600 font-bold hover:text-purple-700 underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
+              className="ml-1 text-primary font-bold hover:text-primary/80 underline underline-offset-2 hover:underline-offset-4 transition-all duration-200"
             >
               Register Now
             </Link>
