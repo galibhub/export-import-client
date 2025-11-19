@@ -10,6 +10,7 @@ import Register from "../pages/Register";
 import PrivetRoute from "./PrivetRoute";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
+import ProductDetails from "../components/ProductDetails/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,12 @@ const router = createBrowserRouter([
         path: "/allProducts",
         element: <AllProducts />,
         loader:()=>fetch('http://localhost:3000/products')
+      },
+      {
+        path:'/product-details/:id',
+        element:<ProductDetails></ProductDetails>,
+        loader:({params})=>fetch(`http://localhost:3000/products/${params.id}`)
+
       },
       {
         path:'/about-us',

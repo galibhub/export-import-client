@@ -6,7 +6,7 @@ import Banner from './Banner';
 
 const Home = () => {
     const data=useLoaderData();
-    console.log(data)
+    // console.log(data)
 
     return (
         <div>

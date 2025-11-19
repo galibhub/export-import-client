@@ -3,7 +3,7 @@ import ProductCard from "../ProductCard/ProductCard";
 
 const AllProducts = () => {
     const data = useLoaderData();
-    console.log(data);
+    // console.log(data);
     
     return (
         <div>

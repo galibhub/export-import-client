@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 const LatestProduct = ({product}) => {
-    const {productName,productImage,price,originCountry,rating,availableQuantity}=product;
+    const {_id,productName,productImage,price,originCountry,rating,availableQuantity}=product;
     return (
         <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full flex flex-col">
   {/* Image Section */}
@@ -53,13 +54,13 @@ const LatestProduct = ({product}) => {
     
     {/* Button */}
     <div className="card-actions w-full mt-auto">
-      <button className="btn btn-error w-full hover:scale-105 transition-transform duration-200 shadow-md">
+      <Link to={`/product-details/${_id}`} className="btn btn-error w-full hover:scale-105 transition-transform duration-200 shadow-md">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
         </svg>
         See Details
-      </button>
+      </Link>
     </div>
   </div>
 </div>
