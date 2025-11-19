@@ -1,6 +1,7 @@
 import { use } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { user, LogOut } = use(AuthContext);
@@ -35,10 +36,10 @@ const Navbar = () => {
   const handleLogOut = () => {
     LogOut()
       .then(() => {
-        alert("Sign Out Successfully");
+        toast.success("Sign Out Successfully");
       })
       .catch((error) => {
-        alert(`An Error happened: ${error.message}`);
+        toast.error(`An Error happened: ${error.message}`);
       });
   };
 

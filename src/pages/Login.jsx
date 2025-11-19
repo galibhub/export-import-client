@@ -1,18 +1,39 @@
 import React, { use } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { signIn, popUpLoginIn } = use(AuthContext);
+   
+
+  const navigate=useNavigate();
+  const location=useLocation();
+
+  const from = location.state?.from?.pathname || '/';
+
+
+
+
+
+
+
+
   const handleLogIn = (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
+
     signIn(email, password)
       .then((result) => {
         const user = result.user;
         console.log("sign In SuccessFull", user);
+         toast.success("Login Successful!", {
+          duration: 3000,
+        });
+
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -28,7 +49,10 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log("Google Sign In Successful", user);
-        alert("Login Successful!");
+       toast.success("Login Successful!", {
+          duration: 3000,
+        });
+         navigate(from, { replace: true });
         // You can navigate to home or dashboard here
         // navigate('/');
       })

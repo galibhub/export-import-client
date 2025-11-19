@@ -1,5 +1,6 @@
 import React, { use } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
+import { toast } from 'react-toastify';
 
 const AddExport = () => {
 
@@ -30,7 +31,7 @@ const AddExport = () => {
         .then(data=>{
             console.log(data)
             if(data.insertedId) {
-                alert('Product added successfully!');
+                toast.success('Product added successfully!');
                 e.target.reset(); // Form reset
             }
         })
@@ -49,13 +50,13 @@ const AddExport = () => {
                 
                 {/* Header */}
                 <div className="text-center">
-                    <h2 className="mt-6 text-4xl font-extrabold text-gray-900 tracking-tight">
-                        Add New Export
-                    </h2>
-                    <p className="mt-2 text-sm text-gray-600">
-                        Expand your global catalog by adding a new product below.
-                    </p>
-                </div>
+  <h2 className="mt-6 text-4xl font-bold text-gray-800 tracking-wide">
+    Add New Export
+  </h2>
+  <p className="mt-2 text-sm text-gray-500">
+    Expand your global catalog by adding a new product below.
+  </p>
+</div>
 
                 {/* Form Card */}
                 <div className="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10 border border-gray-100">

@@ -4,6 +4,8 @@ import { Link } from 'react-router';
 const AboutUs = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+
+            
             {/* Hero Section */}
             <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-20">
                 <div className="container mx-auto px-4 text-center">

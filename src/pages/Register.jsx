@@ -2,6 +2,7 @@ import React, { use} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
 import { updateProfile } from "firebase/auth";
+import { toast } from "react-toastify";
 
 
 const Register = () => {
@@ -20,7 +21,7 @@ const Register = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
 
     if (!passwordRegex.test(password)) {
-      alert("Password must be at least 6 characters with uppercase and lowercase letters");
+      toast.error("Password must be at least 6 characters with uppercase and lowercase letters");
       return; 
     }
 
@@ -31,7 +32,7 @@ const Register = () => {
         const user = result.user;
 
   
-        alert('Registration Successful! Please login.');
+        toast.success('Registration Successful! Please login.');
         form.reset(); 
         navigate('/login'); 
       })
