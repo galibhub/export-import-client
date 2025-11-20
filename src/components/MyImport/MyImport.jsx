@@ -56,6 +56,14 @@ const MyImport = () => {
               const remaining = imports.filter((item) => item._id !== id);
               setImports(remaining);
             }
+          })
+          .catch((error) => {
+            console.error("Delete failed:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to delete the product.",
+              icon: "error",
+            });
           });
       }
     });
@@ -108,6 +116,9 @@ const MyImport = () => {
                     src={item.productImage}
                     alt={item.productName}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/300x200?text=No+Image";
+                    }}
                   />
                 
                   <div className="absolute top-4 right-4 badge badge-secondary font-semibold shadow-md">
@@ -135,28 +146,82 @@ const MyImport = () => {
                     </p>
                   </div>
 
-                  {/* Stock Info */}
-                  <div className="flex items-center gap-2 mt-2 text-sm text-base-content/70">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
-                      />
-                    </svg>
-                    <span>
-                      Available Qty:{" "}
-                      <span className="font-semibold">
-                        {item.availableQuantity || 0}
+                  {/* Stock and Import Info */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-base-content/70">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+                        />
+                      </svg>
+                      <span>
+                        Available Qty:{" "}
+                        <span className="font-semibold">
+                          {item.availableQuantity || 0}
+                        </span>
                       </span>
-                    </span>
+                    </div>
+                    
+                    {/* Show import quantity if it exists */}
+                    {item.importQuantity && (
+                      <div className="flex items-center gap-2 text-sm text-base-content/70">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 12h3.75M9 15h3.75M9 18h3.75m3-15a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 016 5.25z"
+                          />
+                        </svg>
+                        <span>
+                          Import Qty:{" "}
+                          <span className="font-semibold text-primary">
+                            {item.importQuantity}
+                          </span>
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Show total cost if import quantity exists */}
+                    {item.importQuantity && (
+                      <div className="flex items-center gap-2 text-sm text-base-content/70">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <span>
+                          Total Cost:{" "}
+                          <span className="font-semibold text-success">
+                            ${(item.price * item.importQuantity).toFixed(2)}
+                          </span>
+                        </span>
+                      </div>
+                    )}
                   </div>
 
               

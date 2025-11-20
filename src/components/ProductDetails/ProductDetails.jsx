@@ -1,4 +1,4 @@
-import React, {  useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../Provider/AuthProvider';
@@ -8,9 +8,31 @@ const ProductDetails = () => {
     const data = useLoaderData();
     const product = data.result;
     
+    // Modal state
+    const [showModal, setShowModal] = useState(false);
+    const [importQuantity, setImportQuantity] = useState(1);
+    const [isImporting, setIsImporting] = useState(false);
 
+    // Open modal when Import Now is clicked
+    const handleImportClick = () => {
+        setShowModal(true);
+    };
 
-    const handleImport = () => {
+    // Your existing import functionality with modal submission
+    const handleModalSubmit = () => {
+        if (!importQuantity || importQuantity <= 0) {
+            toast.error("Please enter a valid quantity!");
+            return;
+        }
+
+        if (importQuantity > product.availableQuantity) {
+            toast.error(`Only ${product.availableQuantity} items available!`);
+            return;
+        }
+
+        setIsImporting(true);
+
+        // Your existing import logic - unchanged
         const { _id, ...productData } = product;
 
         fetch(`http://localhost:3000/myImport`, {
@@ -21,7 +43,8 @@ const ProductDetails = () => {
             body: JSON.stringify({ 
                 ...productData, 
                 productId: _id, 
-                importerEmail: user?.email 
+                importerEmail: user?.email,
+                importQuantity: parseInt(importQuantity) // Add quantity to save
             })
         })
         .then((res) => res.json())
@@ -30,6 +53,8 @@ const ProductDetails = () => {
           
             if (data.success) {
                 toast.success("Product Imported successfully!");
+                setShowModal(false); // Close modal on success
+                setImportQuantity(1); // Reset quantity
             } else {
                 toast.error("Failed to Import product");
             }
@@ -37,6 +62,9 @@ const ProductDetails = () => {
         .catch((error) => {
             console.error(error);
             toast.error("Something went wrong!");
+        })
+        .finally(() => {
+            setIsImporting(false);
         });
     }
 
@@ -101,9 +129,13 @@ const ProductDetails = () => {
                                 </div>
                             </div>
 
-                            {/* Action Buttons */}
+                            {/* Action Buttons - Updated to show modal */}
                             <div className="flex gap-3 mt-6">
-                                <button onClick={handleImport} className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all duration-300">
+                                <button 
+                                    onClick={handleImportClick} 
+                                    className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all duration-300"
+                                    disabled={product.availableQuantity <= 0}
+                                >
                                     🚀 Import Now
                                 </button>
                             </div>
@@ -111,6 +143,72 @@ const ProductDetails = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Import Quantity Modal */}
+            {showModal && (
+                <div className="modal modal-open">
+                    <div className="modal-box max-w-md">
+                        <h3 className="font-bold text-lg mb-4">Import Product</h3>
+                        
+                        <div className="space-y-4">
+                            <div>
+                                <p className="text-base-content/70 mb-2">Product: {product.productName}</p>
+                                <p className="text-base-content/70 mb-4">Available: {product.availableQuantity} units</p>
+                            </div>
+
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text font-medium">Import Quantity</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max={product.availableQuantity}
+                                    value={importQuantity}
+                                    onChange={(e) => setImportQuantity(e.target.value)}
+                                    className="input input-bordered w-full"
+                                    placeholder="Enter quantity"
+                                />
+                            </div>
+
+                            <div className="bg-info/10 p-3 rounded-lg border border-info/20">
+                                <p className="text-sm text-info">
+                                    Total Cost: ${(product.price * importQuantity).toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="modal-action">
+                            <button
+                                type="button"
+                                className="btn btn-ghost"
+                                onClick={() => {
+                                    setShowModal(false);
+                                    setImportQuantity(1);
+                                }}
+                                disabled={isImporting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={handleModalSubmit}
+                                disabled={isImporting || !importQuantity}
+                            >
+                                {isImporting ? (
+                                    <>
+                                        <span className="loading loading-spinner loading-sm"></span>
+                                        Importing...
+                                    </>
+                                ) : (
+                                    'Submit'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
