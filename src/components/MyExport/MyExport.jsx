@@ -15,9 +15,11 @@ const MyExport = () => {
     fetch(`http://localhost:3000/myExport?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
-        setProducts(data);
+        // setProducts(data);
+        setProducts(data.result || []);
         setLoading(false);
       });
+      
   }, [user]);
 
   const handleDelete = (_id) => {

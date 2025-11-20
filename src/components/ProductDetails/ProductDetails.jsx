@@ -1,10 +1,44 @@
-import React from 'react';
+import React, {  useContext } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../Provider/AuthProvider';
 
 const ProductDetails = () => {
+    const {user}=useContext(AuthContext)
     const data = useLoaderData();
     const product = data.result;
-    console.log(product);
+    
+
+
+    const handleImport = () => {
+        const { _id, ...productData } = product;
+
+        fetch(`http://localhost:3000/myImport`, {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify({ 
+                ...productData, 
+                productId: _id, 
+                importerEmail: user?.email 
+            })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+          
+            if (data.success) {
+                toast.success("Product Imported successfully!");
+            } else {
+                toast.error("Failed to Import product");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            toast.error("Something went wrong!");
+        });
+    }
 
     return (
         <div className="min-h-screen bg-base-200">
@@ -69,7 +103,7 @@ const ProductDetails = () => {
 
                             {/* Action Buttons */}
                             <div className="flex gap-3 mt-6">
-                                <button className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all duration-300">
+                                <button onClick={handleImport} className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all duration-300">
                                     🚀 Import Now
                                 </button>
                             </div>
