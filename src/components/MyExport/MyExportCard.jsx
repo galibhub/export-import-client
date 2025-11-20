@@ -2,47 +2,12 @@ import React from "react";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
 
-const MyExportCard = ({ product, index }) => {
+const MyExportCard = ({ product, index ,handleDelete}) => {
   const { _id } = product;
 
 //   const navigate=useNavigate()
 
-  const handleDelete = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`http://localhost:3000/products/${product._id}`, {
-          method: "DELETE",
-          headers: {
-            "content-type": "application/json",
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            // navigate('/myExport')
-             
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your Exported Product has been deleted.",
-              icon: "success",
-            });
-           
-           
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    });
-  };
+  
 
   return (
     <tr className="hover:bg-base-200 transition-colors duration-200">
@@ -58,9 +23,7 @@ const MyExportCard = ({ product, index }) => {
         src={product.productImage}
         alt={product.productName}
         className="h-8 w-8 sm:h-10 sm:w-10 rounded object-cover border-2 border-base-300"
-        onError={(e) => {
-          e.target.src = "https://via.placeholder.com/40x40?text=No+Image";
-        }}
+        
       />
       <span className="text-xs sm:text-sm font-medium text-base-content underline hover:text-primary line-clamp-2">
         {product.productName}
@@ -102,7 +65,7 @@ const MyExportCard = ({ product, index }) => {
         Update
       </Link>
 
-      <button onClick={handleDelete} className="btn btn-xs sm:btn-sm btn-error whitespace-nowrap">
+      <button onClick={()=>handleDelete(_id)} className="btn btn-xs sm:btn-sm btn-error whitespace-nowrap">
         Delete
       </button>
     </div>

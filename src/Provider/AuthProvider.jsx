@@ -10,16 +10,20 @@ const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
     const [user,setUser]=useState(null);
+    const [loading,setLoading]=useState(false)
 
     const createUser=(email,password)=>{
+        setLoading(true)
         return createUserWithEmailAndPassword(auth,email,password);
     }
 
     const signIn=(email,password)=>{
+         setLoading(true)
        return signInWithEmailAndPassword(auth,email,password)
     }
 
     const popUpLoginIn=()=>{
+         setLoading(true)
         return signInWithPopup(auth,provider)
     }
 
@@ -32,15 +36,16 @@ const AuthProvider = ({ children }) => {
     useEffect(()=>{
      const unsubscribe= onAuthStateChanged(auth,(currentUser)=>{
           setUser(currentUser)
+           setLoading(false)
         });
         return ()=>{
-         unsubscribe();
+        return unsubscribe();
         }
     },[])
 
 
     const authData = {
-        auth,user,setUser,createUser,LogOut,signIn,popUpLoginIn
+        auth,user,setUser,createUser,LogOut,signIn,popUpLoginIn,loading
     };
 
     return (
