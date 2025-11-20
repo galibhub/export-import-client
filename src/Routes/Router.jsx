@@ -11,6 +11,7 @@ import PrivetRoute from "./PrivetRoute";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import ProductDetails from "../components/ProductDetails/ProductDetails";
+import UpdateExport from "../components/MyExport/UpdateExport";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,11 @@ const router = createBrowserRouter([
         element:<PrivetRoute><ProductDetails></ProductDetails></PrivetRoute>,
         loader:({params})=>fetch(`http://localhost:3000/products/${params.id}`)
 
+      },
+      {
+       path:'/updateExport/:id',
+       element:<PrivetRoute><UpdateExport></UpdateExport></PrivetRoute>,
+       loader:({params})=>fetch(`http://localhost:3000/products/${params.id}`)
       },
       {
         path:'/about-us',

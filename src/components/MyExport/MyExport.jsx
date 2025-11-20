@@ -8,6 +8,9 @@ const MyExport = () => {
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    //-----//
+    
+
     useEffect(() => {
         fetch(`http://localhost:3000/myExport?email=${user.email}`)
             .then(res => res.json())
@@ -15,7 +18,14 @@ const MyExport = () => {
                 setProduct(data)
                 setLoading(false)
             })
-    }, [])
+    }, [user])
+
+
+
+
+
+
+
 
     if (loading) {
         return (
@@ -86,7 +96,11 @@ const MyExport = () => {
                             <MyExportCard 
                                 key={product._id}
                                 product={product}
-                                index={index}
+                                index={index} 
+
+
+                                
+                                
                             />
                         ))}
                     </tbody>
