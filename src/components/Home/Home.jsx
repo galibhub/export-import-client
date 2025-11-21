@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLoaderData } from 'react-router';
 
 import LatestProduct from '../ProductCard/LatestProduct';

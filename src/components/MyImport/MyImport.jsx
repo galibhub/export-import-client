@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthProvider";
-import Swal from "sweetalert2"; 
 
 const MyImport = () => {
   const { user } = useContext(AuthContext);
   const [imports, setImports] = useState([]);
   const [loading, setLoading] = useState(true);
 
- 
   useEffect(() => {
     if (user?.email) {
       fetch(`http://localhost:3000/myImport?email=${user.email}`)
@@ -27,7 +26,7 @@ const MyImport = () => {
     }
   }, [user]);
 
-// Delete Functionality
+  // Delete Functionality
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -40,7 +39,6 @@ const MyImport = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        
         fetch(`http://localhost:3000/myImport/${id}`, {
           method: "DELETE",
         })
@@ -52,7 +50,7 @@ const MyImport = () => {
                 text: "Product has been removed from your import list.",
                 icon: "success",
               });
-              
+
               const remaining = imports.filter((item) => item._id !== id);
               setImports(remaining);
             }
@@ -72,15 +70,14 @@ const MyImport = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
-            </div>
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-base-200 py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-base-content">
             My Imported Products
@@ -105,28 +102,23 @@ const MyImport = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {imports.map((item) => (
-             
               <article
                 key={item._id}
                 className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-200"
               >
-             
                 <figure className="relative h-56 overflow-hidden">
                   <img
                     src={item.productImage}
                     alt={item.productName}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                  
                   />
-                
+
                   <div className="absolute top-4 right-4 badge badge-secondary font-semibold shadow-md">
                     {item.originCountry}
                   </div>
                 </figure>
 
-                
                 <div className="card-body">
-                  
                   <div className="flex justify-between items-start">
                     <h2 className="card-title text-xl font-bold text-base-content">
                       {item.productName}
@@ -168,7 +160,7 @@ const MyImport = () => {
                         </span>
                       </span>
                     </div>
-                    
+
                     {/* Show import quantity if it exists */}
                     {item.importQuantity && (
                       <div className="flex items-center gap-2 text-sm text-base-content/70">
@@ -222,11 +214,9 @@ const MyImport = () => {
                     )}
                   </div>
 
-              
                   <div className="card-actions justify-end mt-6">
-                    
                     <button
-                      onClick={() => handleDelete(item._id)} 
+                      onClick={() => handleDelete(item._id)}
                       className="btn btn-error btn-outline btn-sm hover:text-white w-full"
                     >
                       <svg

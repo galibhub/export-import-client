@@ -1,8 +1,8 @@
-import React, { use, useEffect, useState } from "react";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import MyExportCard from "./MyExportCard";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../Provider/AuthProvider";
+import MyExportCard from "./MyExportCard";
 
 const MyExport = () => {
   const { user } = use(AuthContext);
@@ -19,7 +19,6 @@ const MyExport = () => {
         setProducts(data.result || []);
         setLoading(false);
       });
-      
   }, [user]);
 
   const handleDelete = (_id) => {
@@ -58,13 +57,13 @@ const MyExport = () => {
     });
   };
 
-   if(loading){
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
-            </div>
-        );
-    }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-base-200 py-8 px-4">
