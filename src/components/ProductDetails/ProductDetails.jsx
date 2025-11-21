@@ -35,7 +35,7 @@ const ProductDetails = () => {
     // Your existing import logic - unchanged
     const { _id, ...productData } = product;
 
-    fetch(`http://localhost:3000/myImport`, {
+    fetch(`https://export-server-alpha.vercel.app/myImport`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

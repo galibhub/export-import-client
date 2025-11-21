@@ -21,12 +21,13 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-        loader: () => fetch("http://localhost:3000/latest-products"),
+        loader: () =>
+          fetch("https://export-server-alpha.vercel.app/latest-products"),
       },
       {
         path: "/allProducts",
         element: <AllProducts />,
-        loader: () => fetch("http://localhost:3000/products"),
+        loader: () => fetch("https://export-server-alpha.vercel.app/products"),
       },
       {
         path: "/product-details/:id",
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
           </PrivetRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/products/${params.id}`),
+          fetch(`https://export-server-alpha.vercel.app/products/${params.id}`),
       },
       {
         path: "/updateExport/:id",
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
           </PrivetRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/products/${params.id}`),
+          fetch(`https://export-server-alpha.vercel.app/products/${params.id}`),
       },
       {
         path: "/about-us",

@@ -12,7 +12,7 @@ const MyExport = () => {
   //-----//
 
   useEffect(() => {
-    fetch(`http://localhost:3000/myExport?email=${user.email}`)
+    fetch(`https://export-server-alpha.vercel.app/myExport?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         // setProducts(data);
@@ -32,7 +32,7 @@ const MyExport = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/products/${_id}`, {
+        fetch(`https://export-server-alpha.vercel.app/products/${_id}`, {
           method: "DELETE",
           headers: {
             "content-type": "application/json",

@@ -19,7 +19,7 @@ const AddExport = () => {
       exporterName: user?.displayName || user?.name || "Unknown Exporter",
       exporterEmail: user?.email || "unknown@email.com",
     };
-    fetch("http://localhost:3000/products", {
+    fetch("https://export-server-alpha.vercel.app/products", {
       method: "POST",
       headers: {
         "content-type": "application/json",

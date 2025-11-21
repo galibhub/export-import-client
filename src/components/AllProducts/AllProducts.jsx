@@ -14,7 +14,7 @@ const AllProducts = () => {
     console.log(search_text);
     setLoading(true);
 
-    fetch(`http://localhost:3000/search?search=${search_text}`)
+    fetch(`https://export-server-alpha.vercel.app/search?search=${search_text}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
