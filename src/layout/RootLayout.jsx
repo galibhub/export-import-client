@@ -9,9 +9,9 @@ const RootLayout = () => {
       <Navbar />
       
       {navigation.state === "loading" && (
-                <div className="fixed top-0 left-0 right-0 z-50 bg-red-900 h-1">
-                    <div className="h-full bg-red-900 animate-pulse"></div>
-                </div>
+                 <div className="min-h-screen flex items-center justify-center">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
             )}
             
             

@@ -71,9 +71,9 @@ const MyImport = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-base-200">
-        <span className="loading loading-ring loading-lg text-primary"></span>
-      </div>
+      <div className="min-h-screen flex items-center justify-center">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
     );
   }
 
@@ -116,9 +116,7 @@ const MyImport = () => {
                     src={item.productImage}
                     alt={item.productName}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                    onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/300x200?text=No+Image";
-                    }}
+                  
                   />
                 
                   <div className="absolute top-4 right-4 badge badge-secondary font-semibold shadow-md">

@@ -58,16 +58,13 @@ const MyExport = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-base-content/70">Loading your exports...</p>
-        </div>
-      </div>
-    );
-  }
+   if(loading){
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+        );
+    }
 
   return (
     <div className="min-h-screen bg-base-200 py-8 px-4">

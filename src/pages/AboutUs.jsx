@@ -1,16 +1,12 @@
 import React from 'react';
-import { Link, useNavigation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
-    const navigation = useNavigation();
+    
 
     return (
         <div className="min-h-screen bg-base-200">
-            {navigation.state === "loading" && (
-                <div className="fixed top-0 left-0 right-0 z-50 bg-primary h-1">
-                    <div className="h-full bg-primary animate-pulse"></div>
-                </div>
-            )}
+           
 
             {/* Hero Section */}
             <div className="bg-gradient-to-r from-primary to-secondary text-primary-content py-20">

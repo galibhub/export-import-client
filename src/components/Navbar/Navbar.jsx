@@ -3,6 +3,9 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { toast } from "react-toastify";
 
+
+import { FaShippingFast } from "react-icons/fa";
+
 const Navbar = () => {
   const { user, LogOut } = use(AuthContext);
 
@@ -82,6 +85,7 @@ const Navbar = () => {
           </ul>
         </div>
         <NavLink to="/" className="btn btn-ghost text-xl text-base-content">
+        <FaShippingFast className="text-primary text-2xl" />
           Export <span className="text-primary">Import</span> Hub
         </NavLink>
       </div>

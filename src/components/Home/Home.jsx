@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLoaderData } from 'react-router';
 
 import LatestProduct from '../ProductCard/LatestProduct';
@@ -6,7 +6,7 @@ import Banner from './Banner';
 
 const Home = () => {
     const data=useLoaderData();
-   
+  
     // console.log(data)
 
     return (
