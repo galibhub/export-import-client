@@ -79,14 +79,18 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow-lg border border-base-300"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[50] mt-3 w-52 p-2 shadow-lg border border-base-300"
           >
             {links}
           </ul>
         </div>
         <NavLink to="/" className="btn btn-ghost text-xl text-base-content">
+
         <FaShippingFast className="text-primary text-2xl" />
-          Export <span className="text-primary">Import</span> Hub
+        
+         <span className="hidden sm:inline">
+       Export <span className="text-primary">Import</span> Hub
+    </span>
         </NavLink>
       </div>
       <div className="navbar-center hidden lg:flex">
