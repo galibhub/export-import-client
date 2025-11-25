@@ -7,6 +7,10 @@ const MyImport = () => {
   const [imports, setImports] = useState([]);
   const [loading, setLoading] = useState(true);
 
+   useEffect(() => {
+      document.title = "My Import";
+    }, []);
+
   useEffect(() => {
     if (user?.email) {
       fetch(

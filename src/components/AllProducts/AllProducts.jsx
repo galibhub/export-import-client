@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import ProductCard from "../ProductCard/ProductCard";
 
@@ -7,6 +7,10 @@ const AllProducts = () => {
   const [products, setProducts] = useState(data);
   const [loading, setLoading] = useState(false);
   // console.log(data);
+
+   useEffect(() => {
+      document.title = "All Products";
+    }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -31,6 +35,8 @@ const AllProducts = () => {
     );
   }
 
+
+  
   return (
     <div>
       <div className="text-2xl text-blue-800 text-center font-bold mt-4 ">

@@ -9,6 +9,10 @@ const MyExport = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+   useEffect(() => {
+      document.title = "My Export";
+    }, []);
+
   //-----//
 
   useEffect(() => {

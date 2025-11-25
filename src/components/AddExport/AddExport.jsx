@@ -1,9 +1,16 @@
-import { use } from "react";
+import { use, useEffect } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const AddExport = () => {
   const { user } = use(AuthContext);
+
+ useEffect(() => {
+    document.title = "Add Export";
+  }, []);
+
+
+
   const handleAddExport = (e) => {
     e.preventDefault();
 

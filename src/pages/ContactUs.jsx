@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const ContactUs = () => {
+
+
+ useEffect(() => {
+    document.title = "Contact Us";
+  }, []);
+
     return (
         <div className="min-h-screen bg-base-200 py-12 px-4">
             <div className="container mx-auto max-w-6xl">
