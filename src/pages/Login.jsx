@@ -12,46 +12,59 @@ const Login = () => {
   const from = location.state?.from?.pathname || '/';
 
   const handleLogIn = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.email.value;
-    const password = form.password.value;
+  e.preventDefault();
+  const form = e.target;
+  const email = form.email.value;
+  const password = form.password.value;
 
-    signIn(email, password)
-      .then((result) => {
-        const user = result.user;
-        console.log("sign In SuccessFull", user);
-         toast.success("Login Successful!", {
-          duration: 3000,
-        });
+  signIn(email, password)
+    .then((result) => {
+      const user = result.user;
 
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert("Error Found", errorCode, errorMessage);
+
+      fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user.email,
+          name: user.displayName || "User",
+        }),
       });
-    console.log({ email, password });
-  };
+
+      toast.success("Login Successful!");
+      navigate(from, { replace: true });
+    })
+    .catch((error) => {
+      toast.error(error.message);
+    });
+};
+
 
   const handlePopUpLogin = () => {
-    popUpLoginIn()
-      .then((result) => {
-        const user = result.user;
-        console.log("Google Sign In Successful", user);
-       toast.success("Login Successful!", {
-          duration: 3000,
-        });
-         navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error("Google Login Error:", errorCode, errorMessage);
-        alert(`Error: ${errorMessage}`);
+  popUpLoginIn()
+    .then((result) => {
+      const user = result.user;
+
+      fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user.email,
+          name: user.displayName || "User",
+        }),
       });
-  };
+
+      toast.success("Login Successful!");
+      navigate(from, { replace: true });
+    })
+    .catch((error) => {
+      toast.error(error.message);
+    });
+};
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">

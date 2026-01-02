@@ -142,3 +142,190 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+
+
+
+// All Products.jsx
+
+import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router";
+import ProductCard from "../ProductCard/ProductCard";
+
+const AllProducts = () => {
+  const data = useLoaderData();
+  const [products, setProducts] = useState(data);
+  const [loading, setLoading] = useState(false);
+  // console.log(data);
+
+   useEffect(() => {
+      document.title = "All Products";
+    }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const search_text = e.target.search.value;
+    console.log(search_text);
+    setLoading(true);
+
+    fetch(`http://localhost:3000/search?search=${search_text}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        console.log(data);
+        setLoading(false);
+      });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    );
+  }
+
+
+  
+  return (
+    <div>
+      <div className="text-2xl text-blue-800 text-center font-bold mt-4 ">
+        All Products
+      </div>
+
+      <form
+        onSubmit={handleSearch}
+        className="flex items-center justify-center mt-3 mb-4"
+      >
+        <label className="input">
+          <svg
+            className="h-[1em] opacity-50"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input name="search" type="search" placeholder="Search" />
+        </label>
+        <button className="btn btn-primary mr-1">
+          {loading ? "Searching..." : "Search"}
+        </button>
+      </form>
+
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 ">
+        {products.map((product) => (
+          <ProductCard key={product._id} product={product}></ProductCard>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default AllProducts;
+
+
+
+// latestProducts.jsx
+
+import React from 'react';
+import { Link } from 'react-router';
+
+const LatestProduct = ({product}) => {
+    const {_id,productName,productImage,price,originCountry,rating,availableQuantity}=product;
+    return (
+        <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300 h-full flex flex-col">
+  {/* Image Section */}
+  <figure className="px-4 pt-4 relative overflow-hidden group">
+    <img
+      src={productImage}
+      alt={productName}
+      className="rounded-xl w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" 
+    />
+    {/* Rating Badge */}
+    <div className="absolute top-6 right-6 bg-warning text-warning-content px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 shadow-lg">
+      ⭐ {rating}
+    </div>
+    {/* Stock Badge */}
+    {availableQuantity < 10 && (
+      <div className="absolute top-6 left-6 bg-error text-error-content px-3 py-1 rounded-full font-semibold text-xs shadow-lg">
+        Only {availableQuantity} left!
+      </div>
+    )}
+  </figure>
+  
+  {/* Content Section */}
+  <div className="card-body flex-grow p-6">
+    {/* Title */}
+    <h2 className="card-title text-xl font-bold text-base-content line-clamp-2 min-h-[3.5rem]">
+      {productName}
+    </h2>
+    
+    {/* Info Grid */}
+    <div className="space-y-3 my-4">
+      {/* Price */}
+      <div className="flex justify-between items-center bg-success/10 p-3 rounded-lg border border-success/20">
+        <span className="text-base-content/70 font-medium">Price</span>
+        <span className="text-2xl font-bold text-success">${price}</span>
+      </div>
+      
+      {/* Origin & Stock */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-info/10 p-3 rounded-lg text-center border border-info/20">
+          <p className="text-xs text-base-content/60 mb-1">Origin</p>
+          <p className="font-semibold text-base-content text-sm">{originCountry}</p>
+        </div>
+        <div className="bg-secondary/10 p-3 rounded-lg text-center border border-secondary/20">
+          <p className="text-xs text-base-content/60 mb-1">Stock</p>
+          <p className="font-semibold text-base-content text-sm">{availableQuantity} units</p>
+        </div>
+      </div>
+    </div>
+    
+    {/* Button */}
+    <div className="card-actions w-full mt-auto">
+      <Link to={`/product-details/${_id}`} className="btn btn-primary w-full hover:scale-105 transition-transform duration-200 shadow-md">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        See Details
+      </Link>
+    </div>
+  </div>
+</div>
+    );
+};
+
+export default LatestProduct;
+
+
+
+
+
+
+//backend
+
+// post for database
+
+    // app.post("/products", async (req, res) => {
+    //   const data = req.body;
+    //   console.log(data);
+    //   const result = await productCollection.insertOne(data);
+
+    //   res.send({
+    //     success: true,
+    //     result,
+    //     insertedId: result.insertedId,
+    //   });
+    // });
+

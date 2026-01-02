@@ -1,32 +1,77 @@
-import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useLoaderData } from "react-router-dom";
 import ProductCard from "../ProductCard/ProductCard";
 
 const AllProducts = () => {
-  const data = useLoaderData();
-  const [products, setProducts] = useState(data);
+  const initialData = useLoaderData();
+  const searchRef = useRef(null); // Reference to clear input field later
+
+  const [products, setProducts] = useState(initialData);
   const [loading, setLoading] = useState(false);
-  // console.log(data);
 
-   useEffect(() => {
-      document.title = "All Products";
-    }, []);
+  const [category, setCategory] = useState("all");
+  const [priceRange, setPriceRange] = useState("all");
 
-  const handleSearch = (e) => {
+  useEffect(() => {
+    document.title = "All Products";
+  }, []);
+
+  // ✅ 1. Stable Categories
+  // Derived from initialData so the dropdown doesn't shrink when you search
+  const categories = useMemo(() => {
+    const allCategories = initialData
+      .map((p) => p.category)
+      .filter(Boolean);
+    return ["all", ...new Set(allCategories)];
+  }, [initialData]);
+
+  // ✅ 2. Filtering Logic (Derived State)
+  const filteredProducts = useMemo(() => {
+    let temp = [...products];
+
+    // Category Filter
+    if (category !== "all") {
+      temp = temp.filter((p) => p.category === category);
+    }
+
+    // Price Filter
+    if (priceRange !== "all") {
+      if (priceRange === "low") temp = temp.filter((p) => p.price < 50);
+      if (priceRange === "mid") temp = temp.filter((p) => p.price >= 50 && p.price <= 200);
+      if (priceRange === "high") temp = temp.filter((p) => p.price > 200);
+    }
+
+    return temp;
+  }, [products, category, priceRange]);
+
+  // 🔎 Search Handler
+  const handleSearch = async (e) => {
     e.preventDefault();
-    const search_text = e.target.search.value;
-    console.log(search_text);
-    setLoading(true);
+    const searchText = searchRef.current.value.trim();
+    
+    if (!searchText) return;
 
-    fetch(`https://export-server-alpha.vercel.app/search?search=${search_text}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        console.log(data);
-        setLoading(false);
-      });
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:3000/search?search=${searchText}`);
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error("Search failed", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // 🔄 Reset Handler
+  const handleReset = () => {
+    setProducts(initialData); // Restore original data
+    setCategory("all");
+    setPriceRange("all");
+    if (searchRef.current) searchRef.current.value = ""; // Clear the input visually
+  };
+
+  // ⏳ Loading State (Spinner)
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -35,48 +80,78 @@ const AllProducts = () => {
     );
   }
 
-
-  
   return (
-    <div>
-      <div className="text-2xl text-blue-800 text-center font-bold mt-4 ">
+    <section className="max-w-7xl mx-auto px-4 py-10">
+      <h1 className="text-4xl font-bold text-center mb-8 text-base-content">
         All Products
-      </div>
+      </h1>
 
+      {/* -------------------- Filters & Search -------------------- */}
       <form
         onSubmit={handleSearch}
-        className="flex items-center justify-center mt-3 mb-4"
+        className="flex flex-col lg:flex-row gap-4 justify-center mb-8"
       >
-        <label className="input">
-          <svg
-            className="h-[1em] opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input name="search" type="search" placeholder="Search" />
-        </label>
-        <button className="btn btn-primary mr-1">
-          {loading ? "Searching..." : "Search"}
+        {/* Input with Ref */}
+        <input
+          ref={searchRef}
+          name="search"
+          type="search"
+          placeholder="Search products..."
+          className="input input-bordered w-full lg:w-1/3"
+        />
+
+        <select
+          className="select select-bordered w-full lg:w-1/4"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat === "all" ? "All Categories" : cat}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="select select-bordered w-full lg:w-1/4"
+          value={priceRange}
+          onChange={(e) => setPriceRange(e.target.value)}
+        >
+          <option value="all">All Prices</option>
+          <option value="low">Below $50</option>
+          <option value="mid">$50 – $200</option>
+          <option value="high">Above $200</option>
+        </select>
+
+        <button type="submit" className="btn btn-primary">
+          Search
+        </button>
+
+        <button
+          type="button"
+          onClick={handleReset}
+          className="btn btn-outline"
+        >
+          Reset
         </button>
       </form>
 
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 ">
-        {products.map((product) => (
-          <ProductCard key={product._id} product={product}></ProductCard>
-        ))}
-      </div>
-    </div>
+      {/* -------------------- Product Grid -------------------- */}
+      {filteredProducts.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-base-content/60 mt-12">
+          <h3 className="text-xl mb-3">No products found</h3>
+          <button onClick={handleReset} className="btn btn-link">
+            Reset Filters
+          </button>
+        </div>
+      )}
+    </section>
   );
 };
 

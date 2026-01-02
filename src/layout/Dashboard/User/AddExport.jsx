@@ -1,15 +1,13 @@
 import { use, useEffect } from "react";
 import { toast } from "react-toastify";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { AuthContext } from "../../../Provider/AuthProvider";
 
 const AddExport = () => {
   const { user } = use(AuthContext);
 
- useEffect(() => {
+  useEffect(() => {
     document.title = "Add Export";
   }, []);
-
-
 
   const handleAddExport = (e) => {
     e.preventDefault();
@@ -26,7 +24,7 @@ const AddExport = () => {
       exporterName: user?.displayName || user?.name || "Unknown Exporter",
       exporterEmail: user?.email || "unknown@email.com",
     };
-    fetch("https://export-server-alpha.vercel.app/products", {
+    fetch("http://localhost:3000/products", {
       method: "POST",
       headers: {
         "content-type": "application/json",

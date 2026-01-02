@@ -17,6 +17,7 @@ A modern web application for managing import and export products. Users can brow
 ## 🛠️ Tech Stack
 
 ### **Client Side**
+
 - React.js (with Vite)
 - Tailwind CSS
 - DaisyUI
@@ -27,6 +28,7 @@ A modern web application for managing import and export products. Users can brow
 - SweetAlert2
 
 ### **Server Side**
+
 - Node.js
 - Express.js
 - MongoDB
@@ -52,6 +54,7 @@ A modern web application for managing import and export products. Users can brow
 Follow these simple steps to run the project on your computer:
 
 ### **Prerequisites**
+
 - Node.js installed on your computer
 - MongoDB installed or MongoDB Atlas account
 - Firebase account for authentication
@@ -59,17 +62,20 @@ Follow these simple steps to run the project on your computer:
 ### **Client Setup**
 
 1. **Clone the client repository**
+
    ```bash
    git clone https://github.com/galibhub/export-import-client.git
    cd export-import-client
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Create `.env.local` file in the root folder and add:**
+
    ```env
    VITE_APIKEY=your_firebase_api_key
    VITE_AUTHDOMAIN=your_firebase_auth_domain
@@ -80,6 +86,7 @@ Follow these simple steps to run the project on your computer:
    ```
 
 4. **Run the client**
+
    ```bash
    npm run dev
    ```
@@ -89,17 +96,20 @@ Follow these simple steps to run the project on your computer:
 ### **Server Setup**
 
 1. **Clone the server repository**
+
    ```bash
    git clone https://github.com/galibhub/export-import-server.git
    cd export-import-server
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Create `.env` file in the root folder and add:**
+
    ```env
    PORT=3000
    DB_USER=your_mongodb_username
@@ -107,6 +117,7 @@ Follow these simple steps to run the project on your computer:
    ```
 
 4. **Run the server**
+
    ```bash
    npm start
    ```
@@ -118,6 +129,7 @@ Follow these simple steps to run the project on your computer:
 ## 🔑 Environment Variables
 
 ### **Client (`.env.local`)**
+
 ```env
 VITE_APIKEY=your_firebase_api_key
 VITE_AUTHDOMAIN=your_firebase_auth_domain
@@ -128,6 +140,7 @@ VITE_APPID=your_firebase_app_id
 ```
 
 ### **Server (`.env`)**
+
 ```env
 PORT=3000
 DB_USER=your_mongodb_username
@@ -139,17 +152,20 @@ DB_PASS=your_mongodb_password
 ## 📡 API Endpoints
 
 ### **Products**
+
 - `GET /latest-products` - Get latest 6 products
 - `GET /products` - Get all products
 - `GET /products/:id` - Get single product details
 - `GET /search?search=keyword` - Search products by name
 
 ### **Imports**
+
 - `GET /myImport?email=user@example.com` - Get user's imports
 - `POST /myImport` - Add new import
 - `DELETE /myImport/:id` - Delete an import
 
 ### **Exports**
+
 - `GET /myExport?email=user@example.com` - Get user's exports
 - `POST /myExport` - Add new export
 - `PUT /myExport/:id` - Update an export
@@ -190,15 +206,19 @@ export-import-client/
 ## 📸 Screenshots
 
 ### Home Page
+
 ![Home Page](screenshots/home.png)
 
 ### All Products
+
 ![All Products](screenshots/products.png)
 
 ### Product Details
+
 ![Product Details](screenshots/details.png)
 
 ### My Imports
+
 ![My Imports](screenshots/imports.png)
 
 ---
@@ -206,7 +226,7 @@ export-import-client/
 ## 🌐 Deployment
 
 - **Frontend:** Deployed on [Netlify](https://export-import-hub.netlify.app/)
-- **Backend:** Deployed on [Vercel](https://export-server-alpha.vercel.app/)
+- **Backend:** Deployed on [Vercel](http://localhost:3000/)
 - **Database:** MongoDB Atlas
 
 ---
@@ -214,6 +234,7 @@ export-import-client/
 ## 📦 NPM Packages Used
 
 ### Client
+
 - `react` - UI library
 - `react-router-dom` - Routing
 - `firebase` - Authentication
@@ -224,6 +245,7 @@ export-import-client/
 - `daisyui` - UI components
 
 ### Server
+
 - `express` - Web framework
 - `mongodb` - Database driver
 - `cors` - Cross-origin resource sharing

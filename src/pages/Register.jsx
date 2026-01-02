@@ -9,37 +9,49 @@ const Register = () => {
   const navigate = useNavigate(); 
 
   const handleRegister = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const photoURL = form.photoURL.value;
-    const password = form.password.value;
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const photoURL = form.photoURL.value;
+  const password = form.password.value;
 
-    // Password validation using regex
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+  // Password validation
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
 
-    if (!passwordRegex.test(password)) {
-      toast.error("Password must be at least 6 characters with uppercase and lowercase letters");
-      return; 
-    }
-
-    console.log("signup", name, email, photoURL, password);
-// CREATE USER
-    createUser(email, password)
-      .then(result => {
-        const user = result.user;
-
-        toast.success('Registration Successful! Please login.');
-        form.reset(); 
-        navigate('/login'); 
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(`Error: ${errorMessage}`);
-      })
+  if (!passwordRegex.test(password)) {
+    toast.error(
+      "Password must be at least 6 characters with uppercase and lowercase letters"
+    );
+    return;
   }
+
+  // 🔐 Create Firebase User
+  createUser(email, password)
+    .then((result) => {
+      const user = result.user;
+
+      // ✅ SAVE USER TO MONGODB (VERY IMPORTANT)
+      fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+        }),
+      });
+
+      toast.success("Registration Successful! Please login.");
+      form.reset();
+      navigate("/login");
+    })
+    .catch((error) => {
+      toast.error(error.message);
+    });
+};
+
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">

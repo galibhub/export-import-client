@@ -2,10 +2,15 @@ import { useContext, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../Provider/AuthProvider";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FcImport } from "react-icons/fc";
 
 const ProductDetails = () => {
   const { user } = useContext(AuthContext);
   const data = useLoaderData();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const product = data.result;
 
   // Modal state
@@ -13,8 +18,20 @@ const ProductDetails = () => {
   const [importQuantity, setImportQuantity] = useState(1);
   const [isImporting, setIsImporting] = useState(false);
 
-  // Open modal when Import Now is clicked
   const handleImportClick = () => {
+    // 🔐 Check login first
+    if (!user) {
+      toast.warning("Please login to import this product");
+
+      navigate("/login", {
+        state: { from: location.pathname },
+        replace: true,
+      });
+
+      return;
+    }
+
+    // ✅ Logged in → open modal
     setShowModal(true);
   };
 
@@ -35,7 +52,7 @@ const ProductDetails = () => {
     // Your existing import logic - unchanged
     const { _id, ...productData } = product;
 
-    fetch(`https://export-server-alpha.vercel.app/myImport`, {
+    fetch(`http://localhost:3000/myImport`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -137,10 +154,11 @@ const ProductDetails = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleImportClick}
-                  className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
                   disabled={product.availableQuantity <= 0}
                 >
-                  🚀 Import Now
+                  <FcImport className="text-2xl" />
+                  <span>Import Now</span>
                 </button>
               </div>
             </div>

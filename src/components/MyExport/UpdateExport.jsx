@@ -17,7 +17,7 @@ const UpdateExport = () => {
       rating: parseFloat(e.target.rating.value),
       availableQuantity: parseInt(e.target.availableQuantity.value),
     };
-    fetch(`https://export-server-alpha.vercel.app/products/${product._id}`, {
+    fetch(`http://localhost:3000/products/${product._id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
