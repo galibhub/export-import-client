@@ -4,6 +4,12 @@ import { AuthContext } from "../../Provider/AuthProvider";
 import { toast } from "react-toastify";
 import { FaShippingFast } from "react-icons/fa";
 
+import { FcAbout, FcHome } from "react-icons/fc";
+import { MdOutlineDashboardCustomize, MdProductionQuantityLimits } from "react-icons/md";
+import { BiSolidContact } from "react-icons/bi";
+import { TbLogout } from "react-icons/tb";
+import { RiLoginCircleLine } from "react-icons/ri";
+
 const Navbar = () => {
   const { user, LogOut } = use(AuthContext);
 
@@ -30,25 +36,29 @@ const Navbar = () => {
   const links = (
   <>
     <li>
-      <NavLink to="/" className={navLinkStyle}>Home</NavLink>
+      <NavLink to="/" className={navLinkStyle}><FcHome />
+Home</NavLink>
     </li>
 
     <li>
-      <NavLink to="/allProducts" className={navLinkStyle}>All Products</NavLink>
+      <NavLink to="/allProducts" className={navLinkStyle}><MdProductionQuantityLimits />All Products</NavLink>
     </li>
 
     <li>
-      <NavLink to="/about-us" className={navLinkStyle}>About Us</NavLink>
+      <NavLink to="/about-us" className={navLinkStyle}><FcAbout />
+About Us</NavLink>
     </li>
 
     <li>
-      <NavLink to="/contact-us" className={navLinkStyle}>Contact Us</NavLink>
+      <NavLink to="/contact-us" className={navLinkStyle}><BiSolidContact />
+Contact Us</NavLink>
     </li>
 
     {user && (
       <li>
         <NavLink to="/dashboard" className={navLinkStyle}>
-          Dashboard
+          <MdOutlineDashboardCustomize />
+Dashboard
         </NavLink>
       </li>
     )}
@@ -165,12 +175,12 @@ const Navbar = () => {
                 onClick={handleLogOut} 
                 className="btn bg-gradient-to-r from-red-500 to-pink-500 text-white border-none hover:shadow-lg hover:brightness-110"
               >
-                Sign Out
+               <TbLogout /> Sign Out
               </button>
             ) : (
               <NavLink to="/login">
                 <button className="btn bg-gradient-to-r from-primary to-secondary text-white border-none hover:shadow-lg hover:brightness-110 px-6">
-                  Login
+                  <RiLoginCircleLine />Login
                 </button>
               </NavLink>
             )}

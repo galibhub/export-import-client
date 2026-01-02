@@ -1,12 +1,10 @@
-import { use, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../Provider/AuthProvider";
-// MyExportCard is no longer needed for this table layout
-// import MyExportCard from "../../../components/MyExport/MyExportCard";
 
 const MyExport = () => {
-  const { user } = use(AuthContext);
+  const { user } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,13 +12,31 @@ const MyExport = () => {
     document.title = "My Export";
   }, []);
 
+  // Initial load
   useEffect(() => {
+    if (!user?.email) return;
+
     fetch(`http://localhost:3000/myExport?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.result || []);
         setLoading(false);
       });
+  }, [user]);
+
+  // 🔁 AUTO REFRESH (Admin approve করলে status update হবে)
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const interval = setInterval(() => {
+      fetch(`http://localhost:3000/myExport?email=${user.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setProducts(data.result || []);
+        });
+    }, 5000); // every 5 sec
+
+    return () => clearInterval(interval);
   }, [user]);
 
   const handleDelete = (_id) => {
@@ -36,22 +52,14 @@ const MyExport = () => {
       if (result.isConfirmed) {
         fetch(`http://localhost:3000/products/${_id}`, {
           method: "DELETE",
-          headers: {
-            "content-type": "application/json",
-          },
         })
           .then((res) => res.json())
-          .then((data) => {
-            const remaining = products.filter((item) => item._id !== _id);
+          .then(() => {
+            const remaining = products.filter(
+              (item) => item._id !== _id
+            );
             setProducts(remaining);
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your Exported Product has been deleted.",
-              icon: "success",
-            });
-          })
-          .catch((error) => {
-            console.log(error);
+            Swal.fire("Deleted!", "Export deleted.", "success");
           });
       }
     });
@@ -68,150 +76,116 @@ const MyExport = () => {
   return (
     <div className="min-h-screen bg-base-200 py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        
-        {/* Header Section (Matching MyImport Design) */}
+
+        {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-base-100 p-6 rounded-xl shadow-sm">
           <div>
-            <h1 className="text-3xl font-bold text-base-content">
-              My Exports
-            </h1>
-            <p className="text-base-content/60 mt-1">
-              Manage your global inventory and export status
+            <h1 className="text-3xl font-bold">My Exports</h1>
+            <p className="text-base-content/60">
+              Manage your export products
             </p>
           </div>
-          
+
           <div className="flex items-center gap-4 mt-4 md:mt-0">
-             <Link
-              to="/addExport"
-              className="btn btn-primary btn-sm md:btn-md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5 mr-1"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Add Export
+            <Link to="/dashboard/add-export" className="btn btn-primary">
+              + Add Export
             </Link>
-            <div className="badge badge-secondary badge-lg p-4">
+            <div className="badge badge-secondary badge-lg">
               Total: {products.length}
             </div>
           </div>
         </div>
 
-        {/* Content Section */}
+        {/* EMPTY STATE */}
         {products.length === 0 ? (
-          <div className="hero bg-base-100 rounded-box shadow-lg p-10">
-            <div className="hero-content text-center">
-              <div className="max-w-md">
-                <h2 className="text-3xl font-bold">No Exports Yet!</h2>
-                <p className="py-6">
-                  You haven't added any products to your export list. 
-                  Start growing your business now.
-                </p>
-                <Link
-                  to="/addExport"
-                  className="btn btn-primary"
-                >
-                  Add Your First Product
-                </Link>
-              </div>
-            </div>
+          <div className="bg-base-100 p-10 rounded-xl text-center shadow">
+            <h2 className="text-2xl font-bold">No Exports Yet</h2>
+            <Link to="/dashboard/add-export" className="btn btn-primary mt-4">
+              Add Export
+            </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto bg-base-100 shadow-xl rounded-xl border border-base-300">
+          <div className="overflow-x-auto bg-base-100 shadow-xl rounded-xl">
             <table className="table table-zebra w-full">
-              {/* Table Head */}
-              <thead className="bg-base-200 text-base-content/70 uppercase text-xs font-bold tracking-wider">
+
+              {/* TABLE HEAD */}
+              <thead className="bg-base-200 text-xs uppercase">
                 <tr>
-                  <th className="p-4">Product Details</th>
-                  <th>Exporter Info</th>
+                  <th>Product</th>
+                  <th>Exporter</th>
                   <th>Destination</th>
-                  <th>Unit Price</th>
+                  <th>Status</th>
+                  <th>Price</th>
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
 
-              {/* Table Body */}
+              {/* TABLE BODY */}
               <tbody>
                 {products.map((item) => (
-                  <tr key={item._id} className="hover hover:bg-base-200/50 transition-colors duration-200">
-                    
-                    {/* Column 1: Product Details (Image, Name, Rating) */}
-                    <td className="p-4">
-                      <div className="flex items-center gap-4">
-                        <div className="avatar">
-                          <div className="mask mask-squircle w-16 h-16 shadow-md bg-base-300">
-                            <img
-                              src={item.productImage}
-                              alt={item.productName}
-                              className="object-cover"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <div className="font-bold text-lg text-base-content">
-                            {item.productName}
-                          </div>
-                          <div className="badge badge-sm badge-outline gap-1 text-xs">
-                            <span className="text-warning">★</span> {item.rating}
-                          </div>
+                  <tr key={item._id}>
+                    {/* Product */}
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={item.productImage}
+                          alt={item.productName}
+                          className="w-14 h-14 rounded object-cover"
+                        />
+                        <div>
+                          <p className="font-bold">{item.productName}</p>
+                          <p className="text-xs">⭐ {item.rating}</p>
                         </div>
                       </div>
                     </td>
 
-                    {/* Column 2: Exporter Name */}
+                    {/* Exporter */}
+                    <td>{item.exporterName}</td>
+
+                    {/* Destination */}
                     <td>
-                      <div className="font-medium text-base-content/80">
-                        {item.exporterName || user.displayName || "N/A"}
-                      </div>
-                      <div className="text-xs text-base-content/50">
-                        Exporter
-                      </div>
+                      <span className="badge badge-ghost">
+                        {item.originCountry || "Global"}
+                      </span>
                     </td>
 
-                    {/* Column 3: Destination (Country) */}
+                    {/* STATUS */}
                     <td>
-                      <div className="badge badge-ghost font-medium">
-                        {item.country || "Global"}
-                      </div>
+                      <span
+                        className={`badge font-semibold ${
+                          item.status === "approved"
+                            ? "badge-success"
+                            : "badge-warning"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
                     </td>
 
-                    {/* Column 4: Price */}
-                    <td className="font-semibold text-primary text-lg">
+                    {/* Price */}
+                    <td className="font-bold text-primary">
                       ${item.price}
                     </td>
 
-                    {/* Column 5: Action */}
+                    {/* Action */}
                     <td className="text-center">
                       <button
                         onClick={() => handleDelete(item._id)}
-                        className="btn btn-square btn-ghost btn-sm text-error hover:bg-error/10 tooltip tooltip-left"
-                        data-tip="Delete Export"
+                        className="btn btn-sm btn-error btn-outline"
+                        disabled={item.status === "approved"}
+                        title={
+                          item.status === "approved"
+                            ? "Approved product can't be deleted"
+                            : ""
+                        }
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
+                        Delete
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         )}
