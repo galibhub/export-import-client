@@ -60,7 +60,7 @@ const AddExport = () => {
       .then((data) => {
         console.log(data);
         if (data.insertedId) {
-          toast.success("Product added successfully!");
+          toast.success("Product submitted successfully and pending for admin approval");
           e.target.reset(); // Form reset
         }
       })
