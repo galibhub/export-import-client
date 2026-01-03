@@ -2,23 +2,24 @@ import React, { use} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
 import { updateProfile } from "firebase/auth";
+import { uploadImage } from "../utils/uploadImage"
+
 import { toast } from "react-toastify";
 
 const Register = () => {
   const { createUser } = use(AuthContext); 
   const navigate = useNavigate(); 
 
-  const handleRegister = (e) => {
+
+const handleRegister = async (e) => {
   e.preventDefault();
   const form = e.target;
   const name = form.name.value;
   const email = form.email.value;
-  const photoURL = form.photoURL.value;
   const password = form.password.value;
+  const imageFile = form.photo.files[0];
 
-  // Password validation
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-
   if (!passwordRegex.test(password)) {
     toast.error(
       "Password must be at least 6 characters with uppercase and lowercase letters"
@@ -26,32 +27,41 @@ const Register = () => {
     return;
   }
 
-  // 🔐 Create Firebase User
-  createUser(email, password)
-    .then((result) => {
-      const user = result.user;
+  try {
+    
+    let photoURL = "";
+    if (imageFile) {
+      photoURL = await uploadImage(imageFile); 
+    }
 
-      // ✅ SAVE USER TO MONGODB (VERY IMPORTANT)
-      fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-        }),
-      });
+    
+    const result = await createUser(email, password);
+    const user = result.user;
 
-      toast.success("Registration Successful! Please login.");
-      form.reset();
-      navigate("/login");
-    })
-    .catch((error) => {
-      toast.error(error.message);
+  
+    await updateProfile(user, {
+      displayName: name,
+      photoURL,
     });
-};
 
+   
+    await fetch("http://localhost:3000/users", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        photoURL,
+      }),
+    });
+
+    toast.success("Registration Successful!");
+    form.reset();
+    navigate("/login");
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
@@ -110,15 +120,19 @@ const Register = () => {
 
             <div>
               <label className="block text-sm font-medium text-base-content mb-2">
-                Photo URL
+                Photo
               </label>
               <input
-                type="url"
-                name="photoURL"
-                placeholder="Enter photo URL (optional)"
-                className="w-full px-4 py-3 border border-base-300 bg-base-200 text-base-content rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                type="file"
+                name="photo"
+                accept="image/*"
+                className="file-input file-input-bordered w-full bg-base-200"
               />
+              <p className="text-xs text-base-content/60 mt-1">
+                Upload your profile picture (optional)
+              </p>
             </div>
+
 
             <div>
               <label className="block text-sm font-medium text-base-content mb-2">

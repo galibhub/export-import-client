@@ -23,6 +23,8 @@ import AddExport from "../layout/Dashboard/User/AddExport";
 import AdminDashboardHome from "../layout/Dashboard/Admin/AdminDashboardHome";
 import ManageUsers from "../layout/Dashboard/Admin/ManageUsers";
 import ManageProducts from "../layout/Dashboard/Admin/ManageProducts";
+import Profile from "../layout/Dashboard/User/Profile";
+
 
 const router = createBrowserRouter([
   {
@@ -53,6 +55,7 @@ const router = createBrowserRouter([
       { path: "my-imports", element: <MyImport /> },
       { path: "my-exports", element: <MyExport /> },
       { path: "add-export", element: <AddExport /> },
+      { path: "profile", element: <Profile /> },
 
       // ADMIN
       {

@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import {
   FiHome,
@@ -9,6 +10,7 @@ import {
   FiPieChart,
   FiMenu,
   FiLogOut,
+  FiUser,
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 
@@ -16,9 +18,17 @@ const DashboardLayout = () => {
   const { user, LogOut } = useContext(AuthContext); // ✅ FIXED (LogOut)
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [role, setRole] = useState("user");
 
-  // 🔐 SIMPLE ROLE LOGIC (temporary for assignment)
-  const role = user?.email === "admin@gmail.com" ? "admin" : "user";
+  useEffect(() => {
+    if (!user?.email) return;
+
+    fetch(`http://localhost:3000/users/role/${user.email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setRole(data.role);
+      });
+  }, [user]);
 
   const closeDrawer = () => setIsDrawerOpen(false);
 
@@ -36,28 +46,59 @@ const DashboardLayout = () => {
       <li className="menu-title text-indigo-200 opacity-70 uppercase tracking-wider mt-4">
         User Panel
       </li>
+       <li>
+              <NavLink to="/" className={navLinkClasses}>
+                <FiHome className="text-xl" /> Home
+              </NavLink>
+       </li>
 
       <li>
-        <NavLink to="/dashboard" end className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink
+          to="/dashboard"
+          end
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiPieChart className="text-xl" /> Dashboard Home
         </NavLink>
       </li>
 
       <li>
-        <NavLink to="/dashboard/my-imports" className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink
+          to="/dashboard/my-imports"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiBox className="text-xl" /> My Imports
         </NavLink>
       </li>
 
       <li>
-        <NavLink to="/dashboard/my-exports" className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink
+          to="/dashboard/my-exports"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiUpload className="text-xl" /> My Exports
         </NavLink>
       </li>
 
       <li>
-        <NavLink to="/dashboard/add-export" className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink
+          to="/dashboard/add-export"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiUpload className="text-xl" /> Add Export
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/dashboard/profile"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
+          <FiUser className="text-xl" /> My Profile
         </NavLink>
       </li>
     </>
@@ -71,19 +112,48 @@ const DashboardLayout = () => {
       </li>
 
       <li>
-        <NavLink to="/dashboard/admin" end className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink to="/" className={navLinkClasses}>
+          <FiHome className="text-xl" /> Home
+        </NavLink>
+      </li>
+
+      <li>
+        <NavLink
+          to="/dashboard/profile"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
+          <FiUser className="text-xl" /> My Profile
+        </NavLink>
+      </li>
+
+      <li>
+        <NavLink
+          to="/dashboard/admin"
+          end
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiPieChart className="text-xl" /> Admin Overview
         </NavLink>
       </li>
 
       <li>
-        <NavLink to="/dashboard/admin/manage-users" className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink
+          to="/dashboard/admin/manage-users"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiUsers className="text-xl" /> Manage Users
         </NavLink>
       </li>
 
       <li>
-        <NavLink to="/dashboard/admin/manage-products" className={navLinkClasses} onClick={closeDrawer}>
+        <NavLink
+          to="/dashboard/admin/manage-products"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
           <FiBox className="text-xl" /> Manage Products
         </NavLink>
       </li>
@@ -114,11 +184,14 @@ const DashboardLayout = () => {
       />
 
       {/* ================= MAIN CONTENT ================= */}
-      <div className="drawer-content flex flex-col min-h-screen bg-gray-50">
+      <div className="drawer-content flex flex-col min-h-screen bg-base-100 text-base-content">
         {/* Mobile Navbar */}
         <div className="navbar bg-base-100 shadow-sm lg:hidden sticky top-0 z-30">
           <div className="flex-none">
-            <label htmlFor="dashboard-drawer" className="btn btn-square btn-ghost">
+            <label
+              htmlFor="dashboard-drawer"
+              className="btn btn-square btn-ghost"
+            >
               <FiMenu className="text-2xl" />
             </label>
           </div>
@@ -150,12 +223,6 @@ const DashboardLayout = () => {
             {role === "admin" ? <AdminMenu /> : <UserMenu />}
 
             <div className="divider opacity-20 my-4"></div>
-
-            <li>
-              <NavLink to="/" className={navLinkClasses}>
-                <FiHome className="text-xl" /> Home
-              </NavLink>
-            </li>
           </ul>
 
           {/* User Footer */}
@@ -171,8 +238,12 @@ const DashboardLayout = () => {
               </div>
 
               <div className="flex-1 overflow-hidden">
-                <p className="font-semibold truncate">{user?.displayName || "User"}</p>
-                <p className="text-xs text-indigo-200 truncate">{user?.email}</p>
+                <p className="font-semibold truncate">
+                  {user?.displayName || "User"}
+                </p>
+                <p className="text-xs text-indigo-200 truncate">
+                  {user?.email}
+                </p>
               </div>
 
               <button

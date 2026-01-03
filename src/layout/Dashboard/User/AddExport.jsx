@@ -1,27 +1,51 @@
-import { use, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../Provider/AuthProvider";
+import { uploadImage } from "../../../utils/uploadImage";
 
 const AddExport = () => {
-  const { user } = use(AuthContext);
+  const { user } = useContext(AuthContext);
+  const [exporterName, setExporterName] = useState("");
 
   useEffect(() => {
     document.title = "Add Export";
   }, []);
 
-  const handleAddExport = (e) => {
+  useEffect(() => {
+    if (!user?.email) return;
+
+    fetch(`http://localhost:3000/users/by-email/${user.email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setExporterName(data?.name || "Unknown Exporter");
+      });
+  }, [user]);
+
+  const handleAddExport = async (e) => {
     e.preventDefault();
+    const imageFile = e.target.productImage.files[0];
+
+    let imageURL = "";
+    if (imageFile) {
+      try {
+        imageURL = await uploadImage(imageFile);
+      } catch (err) {
+        toast.error("Image upload failed");
+        return; // ⛔ product submit বন্ধ
+      }
+    }
 
     const formData = {
       productName: e.target.productName.value,
-      productImage: e.target.productImage.value,
+      productImage: imageURL,
+
       price: parseFloat(e.target.price.value),
       originCountry: e.target.originCountry.value,
       rating: parseFloat(e.target.rating.value),
       availableQuantity: parseInt(e.target.availableQuantity.value),
       createdAt: new Date(),
       downloads: 0,
-      exporterName: user?.displayName || user?.name || "Unknown Exporter",
+      exporterName: exporterName,
       exporterEmail: user?.email || "unknown@email.com",
     };
     fetch("http://localhost:3000/products", {
@@ -137,7 +161,7 @@ const AddExport = () => {
                   </svg>
                 </div>
                 <input
-                  type="url"
+                  type="file"
                   name="productImage"
                   required
                   className="focus:ring-primary focus:border-primary block w-full pl-10 sm:text-sm border-base-300 rounded-lg p-3 border bg-base-200 text-base-content"

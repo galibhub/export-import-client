@@ -329,3 +329,53 @@ export default LatestProduct;
     //   });
     // });
 
+
+
+
+
+
+    //   const handleRegister = (e) => {
+    //   e.preventDefault();
+    //   const form = e.target;
+    //   const name = form.name.value;
+    //   const email = form.email.value;
+    //   const imageFile = form.photo.files[0];
+    //   const password = form.password.value;
+    
+    //   // Password validation
+    //   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    
+    //   if (!passwordRegex.test(password)) {
+    //     toast.error(
+    //       "Password must be at least 6 characters with uppercase and lowercase letters"
+    //     );
+    //     return;
+    //   }
+    
+    //   // 🔐 Create Firebase User
+    //   createUser(email, password)
+    //     .then((result) => {
+    //       const user = result.user;
+    
+    //       // ✅ SAVE USER TO MONGODB (VERY IMPORTANT)
+    //       fetch("http://localhost:3000/users", {
+    //         method: "POST",
+    //         headers: {
+    //           "content-type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           name,
+    //           email,
+    //         }),
+    //       });
+    
+    //       toast.success("Registration Successful! Please login.");
+    //       form.reset();
+    //       navigate("/login");
+    //     })
+    //     .catch((error) => {
+    //       toast.error(error.message);
+    //     });
+    // };
+    
+
