@@ -1,13 +1,13 @@
-import React, { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
-  GoogleAuthProvider,
   signInWithPopup,
+  signOut,
 } from "firebase/auth";
+import { createContext, useEffect, useState } from "react";
 import app from "../firebase/firebase.init";
 
 export const AuthContext = createContext();
@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
 
       if (currentUser?.email) {
         const res = await fetch(
-          `http://localhost:3000/users/role/${currentUser.email}`
+          `https://export-server-alpha.vercel.app/users/role/${currentUser.email}`
         );
         const data = await res.json();
         setRole(data.role); // ✅ role sync from DB

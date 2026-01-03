@@ -122,7 +122,7 @@ Follow these simple steps to run the project on your computer:
    npm start
    ```
 
-5. **Server will run on:** `http://localhost:3000`
+5. **Server will run on:** `https://export-server-alpha.vercel.app`
 
 ---
 
@@ -226,7 +226,7 @@ export-import-client/
 ## 🌐 Deployment
 
 - **Frontend:** Deployed on [Netlify](https://export-import-hub.netlify.app/)
-- **Backend:** Deployed on [Vercel](http://localhost:3000/)
+- **Backend:** Deployed on [Vercel](https://export-server-alpha.vercel.app/)
 - **Database:** MongoDB Atlas
 
 ---

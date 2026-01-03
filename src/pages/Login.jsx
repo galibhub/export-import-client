@@ -1,70 +1,68 @@
-import React, { use } from "react";
+import { use } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../Provider/AuthProvider";
 import { toast } from "react-toastify";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const Login = () => {
   const { signIn, popUpLoginIn } = use(AuthContext);
-   
-  const navigate=useNavigate();
-  const location=useLocation();
 
-  const from = location.state?.from?.pathname || '/';
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const handleLogIn = (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const email = form.email.value;
-  const password = form.password.value;
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
 
-  signIn(email, password)
-    .then((result) => {
-      const user = result.user;
+    signIn(email, password)
+      .then((result) => {
+        const user = result.user;
 
+        fetch("https://export-server-alpha.vercel.app/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.email,
+            name: user.displayName || "User",
+          }),
+        });
 
-      fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.displayName || "User",
-        }),
+        toast.success("Login Successful!");
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        toast.error(error.message);
       });
-
-      toast.success("Login Successful!");
-      navigate(from, { replace: true });
-    })
-    .catch((error) => {
-      toast.error(error.message);
-    });
-};
-
+  };
 
   const handlePopUpLogin = () => {
-  popUpLoginIn()
-    .then((result) => {
-      const user = result.user;
+    popUpLoginIn()
+      .then((result) => {
+        const user = result.user;
 
-      fetch("http://localhost:3000/users", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.displayName || "User",
-        }),
+        fetch("https://export-server-alpha.vercel.app/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.email,
+            name: user.displayName || "User",
+          }),
+        });
+
+        toast.success("Login Successful!");
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        toast.error(error.message);
       });
-
-      toast.success("Login Successful!");
-      navigate(from, { replace: true });
-    })
-    .catch((error) => {
-      toast.error(error.message);
-    });
-};
+  };
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">

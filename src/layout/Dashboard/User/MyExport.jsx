@@ -16,7 +16,7 @@ const MyExport = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    fetch(`http://localhost:3000/myExport?email=${user.email}`)
+    fetch(`https://export-server-alpha.vercel.app/myExport?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.result || []);
@@ -29,7 +29,9 @@ const MyExport = () => {
     if (!user?.email) return;
 
     const interval = setInterval(() => {
-      fetch(`http://localhost:3000/myExport?email=${user.email}`)
+      fetch(
+        `https://export-server-alpha.vercel.app/myExport?email=${user.email}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setProducts(data.result || []);
@@ -50,14 +52,12 @@ const MyExport = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/products/${_id}`, {
+        fetch(`https://export-server-alpha.vercel.app/products/${_id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
           .then(() => {
-            const remaining = products.filter(
-              (item) => item._id !== _id
-            );
+            const remaining = products.filter((item) => item._id !== _id);
             setProducts(remaining);
             Swal.fire("Deleted!", "Export deleted.", "success");
           });
@@ -76,14 +76,11 @@ const MyExport = () => {
   return (
     <div className="min-h-screen bg-base-200 py-10 px-4">
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-base-100 p-6 rounded-xl shadow-sm">
           <div>
             <h1 className="text-3xl font-bold">My Exports</h1>
-            <p className="text-base-content/60">
-              Manage your export products
-            </p>
+            <p className="text-base-content/60">Manage your export products</p>
           </div>
 
           <div className="flex items-center gap-4 mt-4 md:mt-0">
@@ -107,7 +104,6 @@ const MyExport = () => {
         ) : (
           <div className="overflow-x-auto bg-base-100 shadow-xl rounded-xl">
             <table className="table table-zebra w-full">
-
               {/* TABLE HEAD */}
               <thead className="bg-base-200 text-xs uppercase">
                 <tr>
@@ -163,9 +159,7 @@ const MyExport = () => {
                     </td>
 
                     {/* Price */}
-                    <td className="font-bold text-primary">
-                      ${item.price}
-                    </td>
+                    <td className="font-bold text-primary">${item.price}</td>
 
                     {/* Action */}
                     <td className="text-center">
@@ -185,7 +179,6 @@ const MyExport = () => {
                   </tr>
                 ))}
               </tbody>
-
             </table>
           </div>
         )}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import ProductCard from "../ProductCard/ProductCard";
 
@@ -19,9 +19,7 @@ const AllProducts = () => {
   // ✅ 1. Stable Categories
   // Derived from initialData so the dropdown doesn't shrink when you search
   const categories = useMemo(() => {
-    const allCategories = initialData
-      .map((p) => p.category)
-      .filter(Boolean);
+    const allCategories = initialData.map((p) => p.category).filter(Boolean);
     return ["all", ...new Set(allCategories)];
   }, [initialData]);
 
@@ -37,7 +35,8 @@ const AllProducts = () => {
     // Price Filter
     if (priceRange !== "all") {
       if (priceRange === "low") temp = temp.filter((p) => p.price < 50);
-      if (priceRange === "mid") temp = temp.filter((p) => p.price >= 50 && p.price <= 200);
+      if (priceRange === "mid")
+        temp = temp.filter((p) => p.price >= 50 && p.price <= 200);
       if (priceRange === "high") temp = temp.filter((p) => p.price > 200);
     }
 
@@ -48,12 +47,14 @@ const AllProducts = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     const searchText = searchRef.current.value.trim();
-    
+
     if (!searchText) return;
 
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:3000/search?search=${searchText}`);
+      const res = await fetch(
+        `https://export-server-alpha.vercel.app/search?search=${searchText}`
+      );
       const data = await res.json();
       setProducts(data);
     } catch (err) {
@@ -127,11 +128,7 @@ const AllProducts = () => {
           Search
         </button>
 
-        <button
-          type="button"
-          onClick={handleReset}
-          className="btn btn-outline"
-        >
+        <button type="button" onClick={handleReset} className="btn btn-outline">
           Reset
         </button>
       </form>

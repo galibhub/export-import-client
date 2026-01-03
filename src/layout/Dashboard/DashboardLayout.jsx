@@ -1,18 +1,18 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
-import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { useContext, useEffect, useState } from "react";
 import {
-  FiHome,
   FiBox,
-  FiUpload,
-  FiUsers,
-  FiPieChart,
-  FiMenu,
+  FiHome,
   FiLogOut,
+  FiMenu,
+  FiPieChart,
+  FiUpload,
   FiUser,
+  FiUsers,
 } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const DashboardLayout = () => {
   const { user, LogOut } = useContext(AuthContext); // ✅ FIXED (LogOut)
@@ -23,7 +23,7 @@ const DashboardLayout = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    fetch(`http://localhost:3000/users/role/${user.email}`)
+    fetch(`https://export-server-alpha.vercel.app/users/role/${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setRole(data.role);
@@ -46,11 +46,21 @@ const DashboardLayout = () => {
       <li className="menu-title text-indigo-200 opacity-70 uppercase tracking-wider mt-4">
         User Panel
       </li>
-       <li>
-              <NavLink to="/" className={navLinkClasses}>
-                <FiHome className="text-xl" /> Home
-              </NavLink>
-       </li>
+      <li>
+        <NavLink to="/" className={navLinkClasses}>
+          <FiHome className="text-xl" /> Home
+        </NavLink>
+      </li>
+
+      <li>
+        <NavLink
+          to="/dashboard/profile"
+          className={navLinkClasses}
+          onClick={closeDrawer}
+        >
+          <FiUser className="text-xl" /> My Profile
+        </NavLink>
+      </li>
 
       <li>
         <NavLink
@@ -90,15 +100,6 @@ const DashboardLayout = () => {
           onClick={closeDrawer}
         >
           <FiUpload className="text-xl" /> Add Export
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/dashboard/profile"
-          className={navLinkClasses}
-          onClick={closeDrawer}
-        >
-          <FiUser className="text-xl" /> My Profile
         </NavLink>
       </li>
     </>

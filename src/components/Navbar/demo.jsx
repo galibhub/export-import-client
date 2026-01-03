@@ -1,7 +1,7 @@
 import { use, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { AuthContext } from "../../Provider/AuthProvider";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
   const { user, LogOut } = use(AuthContext);
@@ -149,7 +149,6 @@ export default Navbar;
 
 // All Products.jsx
 
-import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import ProductCard from "../ProductCard/ProductCard";
 
@@ -169,7 +168,7 @@ const AllProducts = () => {
     console.log(search_text);
     setLoading(true);
 
-    fetch(`http://localhost:3000/search?search=${search_text}`)
+    fetch(`https://export-server-alpha.vercel.app/search?search=${search_text}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -237,8 +236,6 @@ export default AllProducts;
 
 // latestProducts.jsx
 
-import React from 'react';
-import { Link } from 'react-router';
 
 const LatestProduct = ({product}) => {
     const {_id,productName,productImage,price,originCountry,rating,availableQuantity}=product;
@@ -358,7 +355,7 @@ export default LatestProduct;
     //       const user = result.user;
     
     //       // ✅ SAVE USER TO MONGODB (VERY IMPORTANT)
-    //       fetch("http://localhost:3000/users", {
+    //       fetch("https://export-server-alpha.vercel.app/users", {
     //         method: "POST",
     //         headers: {
     //           "content-type": "application/json",

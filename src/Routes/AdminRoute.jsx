@@ -8,9 +8,9 @@ const AdminRoute = ({ children }) => {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:3000/users/role/${user.email}`)
-        .then(res => res.json())
-        .then(data => setRole(data.role));
+      fetch(`https://export-server-alpha.vercel.app/users/role/${user.email}`)
+        .then((res) => res.json())
+        .then((data) => setRole(data.role));
     }
   }, [user]);
 

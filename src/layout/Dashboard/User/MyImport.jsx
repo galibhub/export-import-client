@@ -13,7 +13,9 @@ const MyImport = () => {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:3000/myImport?email=${user.email}`)
+      fetch(
+        `https://export-server-alpha.vercel.app/myImport?email=${user.email}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setImports(data.result || data || []);
@@ -42,7 +44,7 @@ const MyImport = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/myImport/${id}`, {
+        fetch(`https://export-server-alpha.vercel.app/myImport/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
@@ -126,7 +128,10 @@ const MyImport = () => {
               {/* Table Body */}
               <tbody>
                 {imports.map((item) => (
-                  <tr key={item._id} className="hover hover:bg-base-200/50 transition-colors duration-200">
+                  <tr
+                    key={item._id}
+                    className="hover hover:bg-base-200/50 transition-colors duration-200"
+                  >
                     {/* Product Info Column */}
                     <td className="p-4">
                       <div className="flex items-center gap-4">
@@ -144,7 +149,8 @@ const MyImport = () => {
                             {item.productName}
                           </div>
                           <div className="badge badge-sm badge-outline gap-1 text-xs">
-                            <span className="text-warning">★</span> {item.rating}
+                            <span className="text-warning">★</span>{" "}
+                            {item.rating}
                           </div>
                         </div>
                       </div>

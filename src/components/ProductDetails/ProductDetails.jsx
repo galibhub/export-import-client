@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { FcImport } from "react-icons/fc";
+import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../Provider/AuthProvider";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FcImport } from "react-icons/fc";
 
 const ProductDetails = () => {
   const { user } = useContext(AuthContext);
@@ -52,7 +51,7 @@ const ProductDetails = () => {
     // Your existing import logic - unchanged
     const { _id, ...productData } = product;
 
-    fetch(`http://localhost:3000/myImport`, {
+    fetch(`https://export-server-alpha.vercel.app/myImport`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

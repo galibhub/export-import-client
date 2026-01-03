@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const TopCategories = () => {
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12">
+    <section className="max-w-8xl mx-auto px-4 py-12">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
         Top Export Categories
       </h2>

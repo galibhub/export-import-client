@@ -1,15 +1,19 @@
-import { useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
-import { 
-  FaTrashAlt, 
-  FaUserShield, 
-  FaUserTie, 
-  FaUsers, 
-  FaChevronLeft, 
-  FaChevronRight 
+import { AuthContext } from "../../../Provider/AuthProvider";
+
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaTrashAlt,
+  FaUserShield,
+  FaUserTie,
+  FaUsers,
 } from "react-icons/fa";
 
 const ManageUsers = () => {
+  const { user: loggedInUser } = useContext(AuthContext);
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +22,7 @@ const ManageUsers = () => {
   const itemsPerPage = 10; // Number of users per page
 
   useEffect(() => {
-    fetch("http://localhost:3000/users")
+    fetch("https://export-server-alpha.vercel.app/users")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -50,7 +54,7 @@ const ManageUsers = () => {
       confirmButtonText: "Yes, Update!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/users/role/${user._id}`, {
+        fetch(`https://export-server-alpha.vercel.app/users/role/${user._id}`, {
           method: "PATCH",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ role }),
@@ -82,11 +86,11 @@ const ManageUsers = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/users/${id}`, {
+        fetch(`https://export-server-alpha.vercel.app/users/${id}`, {
           method: "DELETE",
         }).then(() => {
           Swal.fire("Deleted!", "User has been deleted.", "success");
-          
+
           const remaining = users.filter((u) => u._id !== id);
           setUsers(remaining);
 
@@ -110,7 +114,6 @@ const ManageUsers = () => {
   return (
     <div className="min-h-screen bg-base-200 p-8 font-sans">
       <div className="max-w-6xl mx-auto">
-        
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-base-100 p-6 rounded-2xl shadow-sm">
           <div>
@@ -164,11 +167,21 @@ const ManageUsers = () => {
                     <td>
                       <div className="flex items-center gap-3">
                         <div className="avatar">
-                          <div className="mask mask-squircle w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
-                            {/* Initials placeholder */}
-                            {user.email?.charAt(0).toUpperCase()}
+                          <div className="w-10 h-10 rounded-full overflow-hidden ring ring-primary/20">
+                            {user.photoURL ? (
+                              <img
+                                src={user.photoURL}
+                                alt={user.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                                {user.email?.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                           </div>
                         </div>
+
                         <div>
                           <div className="font-bold text-base-content">
                             {user.name || "Unknown Name"}
@@ -198,25 +211,21 @@ const ManageUsers = () => {
                       <div className="flex items-center justify-center gap-2">
                         {/* Role Toggle Button */}
                         {user.role === "admin" ? (
-                          <div
-                            className="tooltip"
-                            data-tip="Demote to User"
-                          >
+                          <div className="tooltip" data-tip="Demote to User">
                             <button
                               onClick={() => changeRole(user, "user")}
-                              className="btn btn-sm btn-circle btn-ghost text-warning hover:bg-warning/10"
+                              disabled={user.email === loggedInUser?.email}
+                              className="btn btn-sm btn-circle btn-ghost text-warning hover:bg-warning/10 disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                               <FaUserTie className="text-lg" />
                             </button>
                           </div>
                         ) : (
-                          <div
-                            className="tooltip"
-                            data-tip="Promote to Admin"
-                          >
+                          <div className="tooltip" data-tip="Promote to Admin">
                             <button
                               onClick={() => changeRole(user, "admin")}
-                              className="btn btn-sm btn-circle btn-ghost text-success hover:bg-success/10"
+                              disabled={user.email === loggedInUser?.email}
+                              className="btn btn-sm btn-circle btn-ghost text-success hover:bg-success/10 disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                               <FaUserShield className="text-lg" />
                             </button>
@@ -227,7 +236,8 @@ const ManageUsers = () => {
                         <div className="tooltip" data-tip="Delete User">
                           <button
                             onClick={() => deleteUser(user._id)}
-                            className="btn btn-sm btn-circle btn-ghost text-error hover:bg-error/10"
+                            disabled={user.email === loggedInUser?.email}
+                            className="btn btn-sm btn-circle btn-ghost text-error hover:bg-error/10 disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <FaTrashAlt className="text-lg" />
                           </button>
@@ -243,39 +253,41 @@ const ManageUsers = () => {
           {/* Pagination Controls */}
           {users.length > itemsPerPage && (
             <div className="p-4 border-t border-base-200 flex justify-center items-center gap-2">
-              <button 
-                className="btn btn-sm btn-outline" 
+              <button
+                className="btn btn-sm btn-outline"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
                 <FaChevronLeft /> Prev
               </button>
-              
+
               <div className="join">
-                 {/* Page Number Buttons */}
-                 {[...Array(totalPages)].map((_, i) => {
-                    // Logic to show limited page numbers (First, Last, Current, Neighbors)
-                    if (
-                        i === 0 || 
-                        i === totalPages - 1 || 
-                        (i >= currentPage - 2 && i <= currentPage)
-                    ) {
-                        return (
-                            <button
-                                key={i}
-                                onClick={() => handlePageChange(i + 1)}
-                                className={`join-item btn btn-sm ${currentPage === i + 1 ? 'btn-primary' : 'btn-ghost'}`}
-                            >
-                                {i + 1}
-                            </button>
-                        );
-                    }
-                    return null;
-                 })}
+                {/* Page Number Buttons */}
+                {[...Array(totalPages)].map((_, i) => {
+                  // Logic to show limited page numbers (First, Last, Current, Neighbors)
+                  if (
+                    i === 0 ||
+                    i === totalPages - 1 ||
+                    (i >= currentPage - 2 && i <= currentPage)
+                  ) {
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => handlePageChange(i + 1)}
+                        className={`join-item btn btn-sm ${
+                          currentPage === i + 1 ? "btn-primary" : "btn-ghost"
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    );
+                  }
+                  return null;
+                })}
               </div>
 
-              <button 
-                className="btn btn-sm btn-outline" 
+              <button
+                className="btn btn-sm btn-outline"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >

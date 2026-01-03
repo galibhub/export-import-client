@@ -14,7 +14,7 @@ const AddExport = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    fetch(`http://localhost:3000/users/by-email/${user.email}`)
+    fetch(`https://export-server-alpha.vercel.app/users/by-email/${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setExporterName(data?.name || "Unknown Exporter");
@@ -31,13 +31,14 @@ const AddExport = () => {
         imageURL = await uploadImage(imageFile);
       } catch (err) {
         toast.error("Image upload failed");
-        return; // ⛔ product submit বন্ধ
+        return;
       }
     }
 
     const formData = {
       productName: e.target.productName.value,
       productImage: imageURL,
+      shortDescription: e.target.shortDescription.value,
 
       price: parseFloat(e.target.price.value),
       originCountry: e.target.originCountry.value,
@@ -48,7 +49,7 @@ const AddExport = () => {
       exporterName: exporterName,
       exporterEmail: user?.email || "unknown@email.com",
     };
-    fetch("http://localhost:3000/products", {
+    fetch("https://export-server-alpha.vercel.app/products", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -166,6 +167,38 @@ const AddExport = () => {
                   required
                   className="focus:ring-primary focus:border-primary block w-full pl-10 sm:text-sm border-base-300 rounded-lg p-3 border bg-base-200 text-base-content"
                   placeholder="https://example.com/image.jpg"
+                />
+              </div>
+            </div>
+
+            {/* ✅ DESCRIPTION FIELD (NEW – SAME LAYOUT) */}
+            <div>
+              <label className="block text-sm font-medium text-base-content">
+                Product Description
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute top-3 left-3 pointer-events-none">
+                  <svg
+                    className="h-5 w-5 text-base-content/50"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 10h8M8 14h6M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+
+                <textarea
+                  name="shortDescription"
+                  rows="3"
+                  required
+                  className="block w-full pl-10 p-3 border rounded-lg bg-base-200 border-base-300 focus:ring-primary focus:border-primary"
+                  placeholder="Write a short description about this product"
                 />
               </div>
             </div>

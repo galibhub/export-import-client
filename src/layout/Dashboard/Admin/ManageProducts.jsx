@@ -1,17 +1,24 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  FaBoxOpen,
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+  FaClock,
+  FaTrashAlt,
+} from "react-icons/fa";
 import Swal from "sweetalert2";
-import { FaBoxOpen, FaCheckCircle, FaClock, FaTrashAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // প্রতি পেজে ১০টি ডাটা দেখাবে
 
   useEffect(() => {
-    fetch("http://localhost:3000/admin/products")
+    fetch("https://export-server-alpha.vercel.app/admin/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -33,7 +40,7 @@ const ManageProducts = () => {
   };
 
   const handleApprove = (id) => {
-    fetch(`http://localhost:3000/products/approve/${id}`, {
+    fetch(`https://export-server-alpha.vercel.app/products/approve/${id}`, {
       method: "PATCH",
     })
       .then((res) => res.json())
@@ -62,18 +69,18 @@ const ManageProducts = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/products/${id}`, { method: "DELETE" }).then(
-          () => {
-            Swal.fire("Deleted!", "Product has been removed.", "success");
-            const remaining = products.filter((p) => p._id !== id);
-            setProducts(remaining);
-            
-            // যদি বর্তমান পেজের শেষ আইটেম ডিলেট হয়, আগের পেজে নিয়ে যাবে
-            if (currentProducts.length === 1 && currentPage > 1) {
-                setCurrentPage(prev => prev - 1);
-            }
+        fetch(`https://export-server-alpha.vercel.app/products/${id}`, {
+          method: "DELETE",
+        }).then(() => {
+          Swal.fire("Deleted!", "Product has been removed.", "success");
+          const remaining = products.filter((p) => p._id !== id);
+          setProducts(remaining);
+
+          // যদি বর্তমান পেজের শেষ আইটেম ডিলেট হয়, আগের পেজে নিয়ে যাবে
+          if (currentProducts.length === 1 && currentPage > 1) {
+            setCurrentPage((prev) => prev - 1);
           }
-        );
+        });
       }
     });
   };
@@ -89,7 +96,6 @@ const ManageProducts = () => {
   return (
     <div className="min-h-screen bg-base-200 p-8 font-sans">
       <div className="max-w-6xl mx-auto">
-        
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-base-100 p-6 rounded-2xl shadow-sm">
           <div>
@@ -107,7 +113,9 @@ const ManageProducts = () => {
                   <FaBoxOpen className="text-3xl" />
                 </div>
                 <div className="stat-title font-semibold">Total Products</div>
-                <div className="stat-value text-secondary">{products.length}</div>
+                <div className="stat-value text-secondary">
+                  {products.length}
+                </div>
               </div>
             </div>
           </div>
@@ -142,14 +150,14 @@ const ManageProducts = () => {
                           <div className="mask mask-squircle w-12 h-12 bg-base-300 shadow-sm flex items-center justify-center">
                             {/* Optimization: loading="lazy" added */}
                             {product.productImage ? (
-                                <img 
-                                  src={product.productImage} 
-                                  alt="Product" 
-                                  loading="lazy" 
-                                  decoding="async"
-                                />
+                              <img
+                                src={product.productImage}
+                                alt="Product"
+                                loading="lazy"
+                                decoding="async"
+                              />
                             ) : (
-                                <FaBoxOpen className="text-xl opacity-50" />
+                              <FaBoxOpen className="text-xl opacity-50" />
                             )}
                           </div>
                         </div>
@@ -183,7 +191,7 @@ const ManageProducts = () => {
                             </button>
                           </div>
                         )}
-                        
+
                         <div className="tooltip" data-tip="Delete Product">
                           <button
                             onClick={() => handleDelete(product._id)}
@@ -203,39 +211,41 @@ const ManageProducts = () => {
           {/* Pagination Controls */}
           {products.length > itemsPerPage && (
             <div className="p-4 border-t border-base-200 flex justify-center items-center gap-2">
-              <button 
-                className="btn btn-sm btn-outline" 
+              <button
+                className="btn btn-sm btn-outline"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
                 <FaChevronLeft /> Prev
               </button>
-              
+
               <div className="join">
-                 {/* Simple Page Numbers Logic */}
-                 {[...Array(totalPages)].map((_, i) => {
-                    // Show specific pages to avoid clutter if too many pages
-                    if (
-                        i === 0 || 
-                        i === totalPages - 1 || 
-                        (i >= currentPage - 2 && i <= currentPage)
-                    ) {
-                        return (
-                            <button
-                                key={i}
-                                onClick={() => handlePageChange(i + 1)}
-                                className={`join-item btn btn-sm ${currentPage === i + 1 ? 'btn-primary' : 'btn-ghost'}`}
-                            >
-                                {i + 1}
-                            </button>
-                        );
-                    }
-                    return null;
-                 })}
+                {/* Simple Page Numbers Logic */}
+                {[...Array(totalPages)].map((_, i) => {
+                  // Show specific pages to avoid clutter if too many pages
+                  if (
+                    i === 0 ||
+                    i === totalPages - 1 ||
+                    (i >= currentPage - 2 && i <= currentPage)
+                  ) {
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => handlePageChange(i + 1)}
+                        className={`join-item btn btn-sm ${
+                          currentPage === i + 1 ? "btn-primary" : "btn-ghost"
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    );
+                  }
+                  return null;
+                })}
               </div>
 
-              <button 
-                className="btn btn-sm btn-outline" 
+              <button
+                className="btn btn-sm btn-outline"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
