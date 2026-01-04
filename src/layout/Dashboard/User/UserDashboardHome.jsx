@@ -13,7 +13,7 @@ import {
 import { AuthContext } from "../../../Provider/AuthProvider";
 
 const UserDashboardHome = () => {
-  const { user } = useContext(AuthContext);
+  const { user ,loading: authLoading } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     exports: 0,
@@ -22,46 +22,57 @@ const UserDashboardHome = () => {
 
   const [chartData, setChartData] = useState([]);
 
-  useEffect(() => {
-    if (!user?.email) return;
+  
+if (authLoading) {
+  return (
+    <div className="flex justify-center items-center min-h-[60vh]">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  );
+}
 
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        // Parallel fetching for better performance
-        const [exportRes, importRes] = await Promise.all([
-          fetch(
-            `https://export-server-alpha.vercel.app/myExport?email=${user.email}`
-          ),
-          fetch(
-            `https://export-server-alpha.vercel.app/myImport?email=${user.email}`
-          ),
-        ]);
 
-        const exportData = await exportRes.json();
-        const importData = await importRes.json();
+useEffect(() => {
+  if (authLoading) return;
 
-        const exportCount = exportData?.result?.length || 0;
-        const importCount = importData?.length || 0;
+  if (!user?.email) {
+    setLoading(false);
+    return;
+  }
 
-        setStats({
-          exports: exportCount,
-          imports: importCount,
-        });
+  const loadData = async () => {
+    try {
+      setLoading(true);
 
-        setChartData([
-          { name: "Exports", value: exportCount, fill: "#6366f1" }, // Indigo
-          { name: "Imports", value: importCount, fill: "#ec4899" }, // Pink
-        ]);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const [exportRes, importRes] = await Promise.all([
+        fetch(`https://export-server-alpha.vercel.app/myExport?email=${user.email}`),
+        fetch(`https://export-server-alpha.vercel.app/myImport?email=${user.email}`),
+      ]);
 
-    loadData();
-  }, [user]);
+      const exportData = await exportRes.json();
+      const importData = await importRes.json();
+
+      const exportCount = exportData?.result?.length || 0;
+      const importCount = importData?.length || 0;
+
+      setStats({ exports: exportCount, imports: importCount });
+
+      setChartData([
+        { name: "Exports", value: exportCount, fill: "#6366f1" },
+        { name: "Imports", value: importCount, fill: "#ec4899" },
+      ]);
+    } catch (error) {
+      console.error("Failed to fetch dashboard data:", error);
+      setStats({ exports: 0, imports: 0 });
+      setChartData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadData();
+}, [user?.email, authLoading]);
+
 
   // Custom Tooltip for Recharts
   const CustomTooltip = ({ active, payload, label }) => {

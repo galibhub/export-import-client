@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const FeaturedExport = () => {
   return (
     
-    <section className="max-w-8xl mx-auto px-5 py-16">
+    <section className="max-w-7xl mx-auto px-5 py-16">
       
       <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-3xl shadow-xl overflow-hidden border border-white/20">
         <div className="flex flex-col lg:flex-row items-center gap-10 p-8 md:p-12 lg:p-16">

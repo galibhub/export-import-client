@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 // 📦 Import Icons
-import { 
-  FaGlobeAmericas, 
-  FaMapMarkerAlt, 
-  FaPhone, 
-  FaEnvelope, 
-  FaFacebookF, 
-  FaTwitter, 
-  FaLinkedinIn, 
+import {
+  FaChevronRight,
+  FaEnvelope,
+  FaFacebookF,
   FaGithub,
-  FaChevronRight 
+  FaGlobeAmericas,
+  FaLinkedinIn,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaTwitter,
 } from "react-icons/fa";
 
 const Footer = () => {
@@ -23,7 +23,7 @@ const Footer = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    fetch(`http://localhost:3000/users/role/${user.email}`)
+    fetch(`https://export-server-alpha.vercel.app/users/role/${user.email}`)
       .then((res) => res.json())
       .then((data) => setRole(data.role));
   }, [user]);
@@ -52,13 +52,11 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-900 text-white border-t-4 border-emerald-500 relative overflow-hidden">
-      
       {/* Background Decorative Blob (Optional) */}
       <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-emerald-500 rounded-full blur-[120px] opacity-10 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          
           {/* 1️⃣ Company Info */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2 group">
@@ -71,18 +69,20 @@ const Footer = () => {
               Simplifying global trade with secure, efficient, and transparent
               export-import solutions. Connect with the world today.
             </p>
-            
+
             {/* Social Icons */}
             <div className="flex gap-4 pt-2">
-              {[FaFacebookF, FaTwitter, FaLinkedinIn, FaGithub].map((Icon, idx) => (
-                <a
-                  key={idx}
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-emerald-500 hover:text-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg"
-                >
-                  <Icon />
-                </a>
-              ))}
+              {[FaFacebookF, FaTwitter, FaLinkedinIn, FaGithub].map(
+                (Icon, idx) => (
+                  <a
+                    key={idx}
+                    href="#"
+                    className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-emerald-500 hover:text-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg"
+                  >
+                    <Icon />
+                  </a>
+                )
+              )}
             </div>
           </div>
 
@@ -114,13 +114,15 @@ const Footer = () => {
             <div className="mt-4 p-3 rounded-lg bg-gray-800/50 border border-gray-700">
               {!user ? (
                 <p className="text-xs text-yellow-500 flex items-start gap-2">
-                  <span>🔒</span> 
-                  <span>Please <b>Login</b> to access full features.</span>
+                  <span>🔒</span>
+                  <span>
+                    Please <b>Login</b> to access full features.
+                  </span>
                 </p>
               ) : role === "admin" ? (
                 <p className="text-xs text-cyan-400 flex items-start gap-2">
-                   <span>🛡️</span>
-                   <span>Admin Mode Active</span>
+                  <span>🛡️</span>
+                  <span>Admin Mode Active</span>
                 </p>
               ) : (
                 <p className="text-xs text-emerald-400 flex items-start gap-2">
@@ -160,11 +162,19 @@ const Footer = () => {
       {/* Bottom Copyright */}
       <div className="bg-gray-950 py-6">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} Export Import Hub. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Export Import Hub. All rights reserved.
+          </p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-emerald-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-emerald-400 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-emerald-400 transition-colors">Cookie Policy</a>
+            <a href="#" className="hover:text-emerald-400 transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-emerald-400 transition-colors">
+              Terms of Service
+            </a>
+            <a href="#" className="hover:text-emerald-400 transition-colors">
+              Cookie Policy
+            </a>
           </div>
         </div>
       </div>

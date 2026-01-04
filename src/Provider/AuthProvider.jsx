@@ -1,3 +1,5 @@
+
+
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -12,7 +14,6 @@ import app from "../firebase/firebase.init";
 
 export const AuthContext = createContext();
 const provider = new GoogleAuthProvider();
-
 const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
@@ -42,26 +43,37 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-
+      
       if (currentUser?.email) {
-        const res = await fetch(
-          `https://export-server-alpha.vercel.app/users/role/${currentUser.email}`
-        );
-        const data = await res.json();
-        setRole(data.role); // ✅ role sync from DB
+        try {
+        
+          const res = await fetch(
+            `https://export-server-alpha.vercel.app/users/role/${currentUser.email}`
+          );
+          
+          if (res.ok) {
+            const data = await res.json();
+            setRole(data.role); 
+          } else {
+             // Fallback if API is down but Firebase works
+             setRole("user"); 
+          }
+        } catch (error) {
+          console.error("Failed to fetch user role:", error);
+          setRole("user"); // Default role on error
+        }
       } else {
         setRole(null);
       }
-
-      setLoading(false);
+      
+      setLoading(false); 
     });
-
     return () => unsubscribe();
   }, []);
 
   const authData = {
     auth,
-    role,
+    role, 
     user,
     setUser,
     createUser,

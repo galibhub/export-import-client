@@ -36,7 +36,7 @@ const ContactUs = () => {
                                 <div>
                                     <h3 className="font-bold text-base-content">Email</h3>
                                     <a href="mailto:support@exportimporthub.com" className="text-primary hover:text-primary/80 text-sm">
-                                        support@exportimporthub.com
+                                        ibrahimgalib32@gmail.com
                                     </a>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@ const ContactUs = () => {
                                 <div>
                                     <h3 className="font-bold text-base-content">Phone</h3>
                                     <a href="tel:+1234567890" className="text-secondary hover:text-secondary/80 text-sm">
-                                        +1 (234) 567-890
+                                        +8801776324437
                                     </a>
                                 </div>
                             </div>
@@ -71,8 +71,8 @@ const ContactUs = () => {
                                 <div>
                                     <h3 className="font-bold text-base-content">Location</h3>
                                     <p className="text-accent text-sm">
-                                        123 Export Street<br/>
-                                        New York, NY 10001
+                                        Ashulia,Savar<br/>
+                                        Dhaka,Bangladesh
                                     </p>
                                 </div>
                             </div>

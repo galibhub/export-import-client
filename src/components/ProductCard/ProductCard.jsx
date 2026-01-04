@@ -1,69 +1,122 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaStar, FaMapMarkerAlt, FaBoxOpen, FaArrowRight, FaTag, FaUserTie } from "react-icons/fa";
 
-const ProductCard = ({product}) => {
-    const {_id,productName,productImage,price,originCountry,rating,availableQuantity}=product;
+const ProductCard = ({ product }) => {
+    const {
+        _id,
+        productName,
+        productImage,
+        price,
+        originCountry,
+        rating,
+        availableQuantity,
+        category,        
+        exporterName,    
+        shortDescription 
+    } = product;
+
+    // Logic for styling
+    const isOutOfStock = availableQuantity === 0;
+
     return (
-    <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 border border-base-300 h-full flex flex-col">
-  {/* Image Section */}
-  <figure className="px-4 pt-4 relative overflow-hidden group">
-    <img
-      src={productImage}
-      alt={productName}
-      className="rounded-xl w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" 
-    />
-    {/* Rating Badge */}
-    <div className="absolute top-6 right-6 bg-warning text-warning-content px-3 py-1 rounded-full font-bold text-sm flex items-center gap-1 shadow-lg">
-      ⭐ {rating}
-    </div>
-    {/* Stock Badge */}
-    {availableQuantity < 10 && (
-      <div className="absolute top-6 left-6 bg-error text-error-content px-3 py-1 rounded-full font-semibold text-xs shadow-lg">
-        Only {availableQuantity} left!
-      </div>
-    )}
-  </figure>
-  
-  {/* Content Section */}
-  <div className="card-body flex-grow p-6">
-    {/* Title */}
-    <h2 className="card-title text-xl font-bold text-base-content line-clamp-2 min-h-[3.5rem]">
-      {productName}
-    </h2>
+        <div className={`group relative bg-base-100 rounded-[2.5rem] border border-base-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden flex flex-col h-full ${isOutOfStock ? 'opacity-70 grayscale-[0.8] pointer-events-none' : ''}`}>
+            
+        
+            <figure className="relative h-64 overflow-hidden">
+                <img
+                    src={productImage}
+                    alt={productName}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
 
-    {/* Info Grid */}
-    <div className="space-y-3 my-4">
-      {/* Price */}
-      <div className="flex justify-between items-center bg-success/10 p-3 rounded-lg border border-success/20">
-        <span className="text-base-content/70 font-medium">Price</span>
-        <span className="text-2xl font-bold text-success">${price}</span>
-      </div>
-      
-      {/* Origin & Stock */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-info/10 p-3 rounded-lg text-center border border-info/20">
-          <p className="text-xs text-base-content/60 mb-1">Origin</p>
-          <p className="font-semibold text-base-content text-sm">{originCountry}</p>
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-base-100 via-transparent to-transparent opacity-60"></div>
+
+                {/* 🏷️ Top Badges */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                   {category && (
+                        <div className="badge border-none bg-base-100/80 backdrop-blur-md text-base-content font-semibold px-3 py-3 shadow-md">
+                            <FaTag className="mr-1 text-xs text-primary" /> {category}
+                        </div>
+                    )}
+                </div>
+
+                {/* ⭐ Rating Badge */}
+                <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-white px-3 py-1 rounded-full font-bold text-xs flex items-center gap-1 shadow-lg border border-white/20">
+                    <FaStar className="text-yellow-400" /> {rating || 0}
+                </div>
+
+                {/* 🚫 Out of Stock Overlay */}
+                {isOutOfStock && (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center text-white z-20">
+                        <FaBoxOpen className="text-4xl opacity-50 mb-2" />
+                        <span className="text-xl font-bold uppercase tracking-widest border-2 border-white/50 px-4 py-1 rounded-lg">Sold Out</span>
+                    </div>
+                )}
+            </figure>
+
+           
+            <div className="p-6 pt-2 flex flex-col flex-grow relative">
+                
+                {/* 💲 Floating Price Tag */}
+                <div className="absolute -top-6 right-6 bg-primary text-primary-content px-4 py-2 rounded-xl shadow-lg font-bold text-lg transform group-hover:scale-110 transition-transform duration-300 border-4 border-base-100 z-10">
+                    ${Number(price).toFixed(2)}
+                </div>
+
+             
+                <div className="flex items-center gap-1 text-xs text-base-content/60 mb-1 font-medium uppercase tracking-wide">
+                    <FaMapMarkerAlt className="text-secondary" /> {originCountry}
+                </div>
+
+                
+                {exporterName && (
+                    <div className="flex items-center gap-2 text-xs text-base-content/60 mb-2 font-medium">
+                        <FaUserTie className="text-primary" />
+                        <span>By {exporterName}</span>
+                    </div>
+                )}
+
+              
+                <h2 className="card-title text-xl font-extrabold text-base-content mb-2 line-clamp-1 group-hover:text-primary transition-colors" title={productName}>
+                    {productName}
+                </h2>
+
+              
+                <p className="text-sm text-base-content/70 line-clamp-2 mb-4 min-h-[40px]">
+                    {shortDescription || "Premium quality product available for global export. Verified and ready to ship."}
+                </p>
+
+                {/* Stock Bar (Visual) */}
+                <div className="mt-auto space-y-4">
+                    <div className="w-full bg-base-200 rounded-full h-2 overflow-hidden">
+                        <div 
+                            className={`h-full rounded-full ${availableQuantity < 10 ? 'bg-warning' : 'bg-success'}`} 
+                            style={{ width: `${Math.min(availableQuantity, 100)}%` }} 
+                        ></div>
+                    </div>
+                    <div className="flex justify-between text-xs font-semibold">
+                        <span className={availableQuantity < 10 ? "text-warning" : "text-success"}>
+                            {availableQuantity > 0 ? `${availableQuantity} In Stock` : "Unavailable"}
+                        </span>
+                        <span className="text-base-content/40">Ready to ship</span>
+                    </div>
+
+                    {/* Action Button */}
+                    <Link 
+                        to={`/product-details/${_id}`} 
+                        className={`btn btn-block border-none text-white rounded-xl shadow-md group-hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden ${isOutOfStock ? 'btn-disabled bg-gray-400' : 'bg-gradient-to-r from-primary to-secondary hover:bg-gradient-to-l'}`}
+                    >
+                        {isOutOfStock ? "Out of Stock" : (
+                            <>
+                                See Details <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+                            </>
+                        )}
+                    </Link>
+                </div>
+            </div>
         </div>
-        <div className="bg-secondary/10 p-3 rounded-lg text-center border border-secondary/20">
-          <p className="text-xs text-base-content/60 mb-1">Stock</p>
-          <p className="font-semibold text-base-content text-sm">{availableQuantity} units</p>
-        </div>
-      </div>
-    </div>
-    
-    {/* Button */}
-    <div className="card-actions w-full mt-auto">
-      <Link to={`/product-details/${_id}`} className="btn btn-primary w-full hover:scale-105 transition-transform duration-200 shadow-md">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-        See Details
-      </Link>
-    </div>
-  </div>
-</div>
     );
 };
 

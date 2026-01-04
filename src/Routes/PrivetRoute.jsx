@@ -1,17 +1,20 @@
-import React, { use } from 'react';
+
+
+
+import React, { useContext } from 'react'; 
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 
 const PrivetRoute = ({ children }) => {
-    const { user, loading } = use(AuthContext);
+    const { user, loading } = useContext(AuthContext); 
     const location = useLocation();
 
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading...</p>
+                    <div className="loading loading-spinner loading-lg text-primary"></div>
+                    <p className="text-gray-600 mt-2">Verifying Session...</p>
                 </div>
             </div>
         );
@@ -21,7 +24,6 @@ const PrivetRoute = ({ children }) => {
         return children;
     }
 
-    // ✅ Store the current location in state before redirecting to login
     return (
         <Navigate 
             to="/login" 

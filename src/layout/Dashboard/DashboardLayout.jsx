@@ -1,6 +1,8 @@
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
-import { useContext, useEffect, useState } from "react";
+
+
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import {
   FiBox,
   FiHome,
@@ -15,20 +17,10 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const DashboardLayout = () => {
-  const { user, LogOut } = useContext(AuthContext); // ✅ FIXED (LogOut)
+  
+  const { user, LogOut, role } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [role, setRole] = useState("user");
-
-  useEffect(() => {
-    if (!user?.email) return;
-
-    fetch(`https://export-server-alpha.vercel.app/users/role/${user.email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setRole(data.role);
-      });
-  }, [user]);
 
   const closeDrawer = () => setIsDrawerOpen(false);
 
@@ -51,7 +43,6 @@ const DashboardLayout = () => {
           <FiHome className="text-xl" /> Home
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/profile"
@@ -61,7 +52,6 @@ const DashboardLayout = () => {
           <FiUser className="text-xl" /> My Profile
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard"
@@ -72,7 +62,6 @@ const DashboardLayout = () => {
           <FiPieChart className="text-xl" /> Dashboard Home
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/my-imports"
@@ -82,7 +71,6 @@ const DashboardLayout = () => {
           <FiBox className="text-xl" /> My Imports
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/my-exports"
@@ -92,7 +80,6 @@ const DashboardLayout = () => {
           <FiUpload className="text-xl" /> My Exports
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/add-export"
@@ -111,13 +98,11 @@ const DashboardLayout = () => {
       <li className="menu-title text-indigo-200 opacity-70 uppercase tracking-wider mt-4">
         Admin Control
       </li>
-
       <li>
         <NavLink to="/" className={navLinkClasses}>
           <FiHome className="text-xl" /> Home
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/profile"
@@ -127,7 +112,6 @@ const DashboardLayout = () => {
           <FiUser className="text-xl" /> My Profile
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/admin"
@@ -138,7 +122,6 @@ const DashboardLayout = () => {
           <FiPieChart className="text-xl" /> Admin Overview
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/admin/manage-users"
@@ -148,7 +131,6 @@ const DashboardLayout = () => {
           <FiUsers className="text-xl" /> Manage Users
         </NavLink>
       </li>
-
       <li>
         <NavLink
           to="/dashboard/admin/manage-products"
@@ -183,7 +165,7 @@ const DashboardLayout = () => {
         checked={isDrawerOpen}
         onChange={() => setIsDrawerOpen(!isDrawerOpen)}
       />
-
+      
       {/* ================= MAIN CONTENT ================= */}
       <div className="drawer-content flex flex-col min-h-screen bg-base-100 text-base-content">
         {/* Mobile Navbar */}
@@ -209,9 +191,9 @@ const DashboardLayout = () => {
 
       {/* ================= SIDEBAR ================= */}
       <div className="drawer-side z-40">
-        <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
-
+        <label htmlFor="dashboard-drawer" className="drawer-overlay" onClick={closeDrawer}></label>
         <aside className="w-80 min-h-full bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 flex flex-col text-white">
+          
           {/* Logo */}
           <div className="h-20 flex items-center justify-center border-b border-white/10">
             <Link to="/" className="text-2xl font-extrabold">
@@ -222,7 +204,6 @@ const DashboardLayout = () => {
           {/* Menu */}
           <ul className="menu flex-1 p-4">
             {role === "admin" ? <AdminMenu /> : <UserMenu />}
-
             <div className="divider opacity-20 my-4"></div>
           </ul>
 
@@ -237,7 +218,6 @@ const DashboardLayout = () => {
                   />
                 </div>
               </div>
-
               <div className="flex-1 overflow-hidden">
                 <p className="font-semibold truncate">
                   {user?.displayName || "User"}
@@ -246,7 +226,6 @@ const DashboardLayout = () => {
                   {user?.email}
                 </p>
               </div>
-
               <button
                 onClick={handleLogout}
                 className="btn btn-circle btn-ghost btn-sm tooltip tooltip-left"
